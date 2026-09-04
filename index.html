@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cp vs. Temperature Materials Database - Engineering Project</title>
+  <style>
+    /* Clean Student Light Academic Theme */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      color: #212529;
+      line-height: 1.4;
+      padding-bottom: 40px;
+    }
+
+    /* Top Academic Header */
+    header {
+      background-color: #ffffff;
+      border-bottom: 2px solid #2563eb;
+      padding: 16px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .header-titles h1 {
+      font-size: 1.35rem;
+      color: #1e40af;
+      font-weight: 700;
+    }
+
+    .header-titles p {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Main Container Grid */
+    .container {
+      max-width: 1320px;
+      margin: 18px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards / Panels */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1f2937;
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Controls & Inputs */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      background-color: #ffffff;
+      color: #111827;
+      outline: none;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 5px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+
+    .btn-sm {
+      padding: 3px 8px;
+      font-size: 0.75rem;
+    }
+
+    /* Scrollable Material Selection List */
+    .mat-list {
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 5px;
+      background: #ffffff;
+    }
+
+    .mat-item {
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mat-item:hover {
+      background-color: #f8fafc;
+    }
+
+    .mat-item.selected {
+      background-color: #eff6ff;
+      border-left: 3px solid #2563eb;
+      font-weight: 600;
+    }
+
+    /* Active Selected Tags */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 38px;
+      padding: 6px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .tag-close {
+      color: #ef4444;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    .tag-close:hover {
+      color: #b91c1c;
+    }
+
+    /* Chart Area */
+    .chart-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 440px;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #plot-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* Floating Data Tooltip */
+    .data-tooltip {
+      position: absolute;
+      background: rgba(17, 24, 39, 0.94);
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      pointer-events: none;
+      display: none;
+      z-index: 50;
+      line-height: 1.4;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.1);
+      max-width: 320px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8fafc;
+      color: #374151;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    /* Bottom Grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 850px) {
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .citation-box {
+      background: #f8fafc;
+      border-left: 3px solid #2563eb;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      border-radius: 0 4px 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="header-titles">
+        <h1>Interactive Specific Heat Capacity (Cp vs. T) Materials Database</h1>
+        <p>Thermodynamic modeling, multi-curve comparison, and data analysis for engineering materials</p>
+      </div>
+      <div class="header-badge">
+        Database: 230 Materials &bull; 8 Engineering Classes
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <div class="container">
+    
+    <!-- Left Column: Controls -->
+    <div class="sidebar">
+      
+      <!-- Panel 1: Material Selection -->
+      <div class="card">
+        <div class="card-title">
+          <span>1. Select Materials to Plot</span>
+          <span style="font-size: 0.75rem; font-weight: 500; color: #6b7280;" id="mat-count-badge">230 loaded</span>
+        </div>
+
+        <!-- Search -->
+        <div class="form-group">
+          <label for="search-input">Search Material by Name or Formula:</label>
+          <input type="text" id="search-input" placeholder="e.g. Copper, Al2O3, Ti-6Al-4V, HDPE, Silicon...">
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="form-group">
+          <label for="category-select">Filter by Class:</label>
+          <select id="category-select">
+            <option value="all">All Classes (230 Materials)</option>
+            <option value="Metals and alloys">Metals and Alloys (35)</option>
+            <option value="Ceramics">Ceramics and Oxides (35)</option>
+            <option value="Semiconductors">Semiconductors (25)</option>
+            <option value="Polymers">Polymers (30)</option>
+            <option value="Glasses">Glasses (25)</option>
+            <option value="Refractories">Refractories &amp; UHTCs (25)</option>
+            <option value="Composite materials">Composite Materials (25)</option>
+            <option value="Other technologically relevant materials">Advanced &amp; Functional (30)</option>
+          </select>
+        </div>
+
+        <!-- Selection List -->
+        <div class="mat-list" id="mat-list"></div>
+
+        <!-- Active Selected Tags -->
+        <div style="margin-top: 10px;">
+          <label>Active Materials in Plot:</label>
+          <div class="tags-container" id="active-tags"></div>
+        </div>
+
+        <!-- Quick Presets -->
+        <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+          <button class="btn btn-sm" id="preset-metals">Metals</button>
+          <button class="btn btn-sm" id="preset-ceramics">Ceramics</button>
+          <button class="btn btn-sm" id="preset-multiclass">Multi-Class</button>
+          <button class="btn btn-sm btn-danger" id="preset-clear">Clear All</button>
+        </div>
+      </div>
+
+      <!-- Panel 2: Temperature & Units -->
+      <div class="card">
+        <div class="card-title">
+          <span>2. Temperature Range &amp; Units</span>
+        </div>
+
+        <!-- Min & Max Temperature Inputs -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <label for="input-tmin">Min Temperature:</label>
+            <input type="number" id="input-tmin" value="200" step="25">
+          </div>
+          <div>
+            <label for="input-tmax">Max Temperature:</label>
+            <input type="number" id="input-tmax" value="1500" step="50">
+          </div>
+        </div>
+
+        <!-- Temperature Unit -->
+        <div class="form-group">
+          <label for="select-tunit">Temperature Scale:</label>
+          <select id="select-tunit">
+            <option value="K" selected>Kelvin (K)</option>
+            <option value="C">Celsius (&deg;C)</option>
+          </select>
+        </div>
+
+        <!-- Specific Heat Unit -->
+        <div class="form-group">
+          <label for="select-cpunit">Specific Heat (Cp) Unit:</label>
+          <select id="select-cpunit">
+            <option value="J/(kg*K)" selected>Specific: J / (kg &middot; K)</option>
+            <option value="J/(mol*K)">Molar: J / (mol &middot; K)</option>
+            <option value="kJ/(kg*K)">Specific: kJ / (kg &middot; K)</option>
+            <option value="cal/(g*C)">Metric Thermal: cal / (g &middot; &deg;C)</option>
+            <option value="BTU/(lb*F)">Imperial: BTU / (lb &middot; &deg;F)</option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Column: Interactive Vector Chart & Data Tables -->
+    <div class="main-content">
+      
+      <!-- Chart Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span style="font-size: 0.95rem; font-weight: 700; color: #111827;" id="chart-title">
+            Specific Heat Capacity (Cp) vs. Temperature (T)
+          </span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-sm btn-primary" id="btn-export-csv">&#128190; Export Plotted CSV</button>
+            <button class="btn btn-sm" id="btn-reset-view">&#8635; Reset Range</button>
+          </div>
+        </div>
+
+        <!-- SVG Vector Chart Container -->
+        <div class="chart-container" id="chart-box">
+          <svg id="plot-svg"></svg>
+          <div class="data-tooltip" id="tooltip"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Grid: Property Ranking Table & Literature Citations -->
+      <div class="bottom-grid">
+        
+        <!-- Dynamic Property Ranking Table -->
+        <div class="card">
+          <div class="card-title">
+            <span>Property Ranking Table</span>
+          </div>
+          
+          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <label style="margin: 0; white-space: nowrap;">At Reference Temperature (T):</label>
+            <input type="range" id="slider-reft" min="100" max="2500" value="298" style="flex: 1;">
+            <span id="label-reft" style="font-size: 0.8rem; font-weight: 700; min-width: 65px; color: #1e40af;">298.15 K</span>
+          </div>
+
+          <div style="max-height: 230px; overflow-y: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Material</th>
+                  <th>Formula</th>
+                  <th>Cp Value</th>
+                </tr>
+              </thead>
+              <tbody id="table-ranking-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Literature Citations & Equations -->
+        <div class="card">
+          <div class="card-title">
+            <span>Literature Sources &amp; Equations</span>
+          </div>
+          <div id="citations-list" style="max-height: 275px; overflow-y: auto;"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Embedded Thermodynamic Engine -->
+  <script>
+    // Embedded 230-Material Database
+    const MATERIALS_DATABASE = [{"id": "met_01", "name": "Aluminum", "formula": "Al", "category": "Metals and alloys", "mw": 26.982, "eq_type": "shomate", "params": {"A": 28.0892, "B": -5.414849, "C": 8.560423, "D": 3.42737, "E": -0.277375}, "T_min": 298.15, "T_max": 933.47, "Cp_298": 24.35, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables (Chase, 1998)", "notes": "Lightweight FCC metal, Tm = 933.47 K (660.32 C)."}, {"id": "met_02", "name": "Copper", "formula": "Cu", "category": "Metals and alloys", "mw": 63.546, "eq_type": "shomate", "params": {"A": 17.72891, "B": 28.0987, "C": -31.25289, "D": 13.97243, "E": 0.068611}, "T_min": 298.15, "T_max": 1357.77, "Cp_298": 24.44, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High electrical/thermal conductivity FCC metal, Tm = 1357.77 K."}, {"id": "met_03", "name": "Iron (alpha)", "formula": "Fe", "category": "Metals and alloys", "mw": 55.845, "eq_type": "shomate", "params": {"A": 18.42868, "B": 24.64301, "C": -8.913705, "D": 9.664705, "E": -0.012643}, "T_min": 298.15, "T_max": 1042.0, "Cp_298": 25.1, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Desai (1986)", "notes": "BCC ferrite phase up to Curie point (1042 K)."}, {"id": "met_04", "name": "Nickel", "formula": "Ni", "category": "Metals and alloys", "mw": 58.693, "eq_type": "shomate", "params": {"A": 14.28823, "B": 48.0645, "C": -48.24357, "D": 22.04639, "E": 0.170669}, "T_min": 298.15, "T_max": 631.0, "Cp_298": 26.07, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Ferromagnetic FCC metal below Curie point (631 K)."}, {"id": "met_05", "name": "Titanium (alpha)", "formula": "Ti", "category": "Metals and alloys", "mw": 47.867, "eq_type": "shomate", "params": {"A": 21.65082, "B": 15.68884, "C": -8.272183, "D": 2.766779, "E": -0.09635}, "T_min": 298.15, "T_max": 1155.0, "Cp_298": 25.06, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "HCP alpha phase; transforms to BCC beta at 1155 K."}, {"id": "met_06", "name": "Tungsten", "formula": "W", "category": "Metals and alloys", "mw": 183.84, "eq_type": "shomate", "params": {"A": 22.84277, "B": 8.016335, "C": -3.220138, "D": 0.814349, "E": 0.04683}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 24.27, "unit": "J/(mol*K)", "source": "NASA Glenn Database / Barin (1995)", "notes": "Highest melting point pure metal (Tm = 3695 K)."}, {"id": "met_07", "name": "Gold", "formula": "Au", "category": "Metals and alloys", "mw": 196.966, "eq_type": "shomate", "params": {"A": 23.6661, "B": 5.30458, "C": -1.488665, "D": 0.402518, "E": 0.045474}, "T_min": 298.15, "T_max": 1337.33, "Cp_298": 25.42, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Noble FCC metal; highly corrosion resistant; Tm = 1337.33 K."}, {"id": "met_08", "name": "Silver", "formula": "Ag", "category": "Metals and alloys", "mw": 107.868, "eq_type": "shomate", "params": {"A": 21.36018, "B": 13.06497, "C": -9.362145, "D": 3.731454, "E": 0.082728}, "T_min": 298.15, "T_max": 1234.93, "Cp_298": 25.35, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Highest room-temperature thermal conductivity metal."}, {"id": "met_09", "name": "Platinum", "formula": "Pt", "category": "Metals and alloys", "mw": 195.084, "eq_type": "shomate", "params": {"A": 23.95475, "B": 6.883713, "C": -2.046908, "D": 0.540192, "E": 0.024734}, "T_min": 298.15, "T_max": 2041.4, "Cp_298": 25.86, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Catalytic standard element; Tm = 2041.4 K."}, {"id": "met_10", "name": "Zinc", "formula": "Zn", "category": "Metals and alloys", "mw": 65.38, "eq_type": "shomate", "params": {"A": 22.14812, "B": 10.82451, "C": -2.71214, "D": 1.25812, "E": 0.0211}, "T_min": 298.15, "T_max": 692.68, "Cp_298": 25.4, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "HCP galvanizing and brass alloying element; Tm = 692.68 K."}, {"id": "met_11", "name": "Lead", "formula": "Pb", "category": "Metals and alloys", "mw": 207.2, "eq_type": "shomate", "params": {"A": 24.1137, "B": 7.8241, "C": -1.2145, "D": 0.3512, "E": 0.00512}, "T_min": 298.15, "T_max": 600.61, "Cp_298": 26.65, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin Thermochemical Data", "notes": "Heavy metal for radiation shielding; Tm = 600.61 K."}, {"id": "met_12", "name": "Magnesium", "formula": "Mg", "category": "Metals and alloys", "mw": 24.305, "eq_type": "shomate", "params": {"A": 22.10842, "B": 10.98231, "C": -2.3415, "D": 0.9821, "E": -0.0152}, "T_min": 298.15, "T_max": 923.0, "Cp_298": 24.87, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Lightweight structural metal (density 1.74 g/cm3)."}, {"id": "met_13", "name": "Tin (beta)", "formula": "Sn", "category": "Metals and alloys", "mw": 118.71, "eq_type": "shomate", "params": {"A": 21.5892, "B": 17.8451, "C": -12.451, "D": 4.1205, "E": 0.0351}, "T_min": 298.15, "T_max": 505.08, "Cp_298": 27.11, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "White tin metallic phase; Tm = 505.08 K."}, {"id": "met_14", "name": "Chromium", "formula": "Cr", "category": "Metals and alloys", "mw": 51.996, "eq_type": "shomate", "params": {"A": 19.3452, "B": 16.892, "C": -5.124, "D": 1.231, "E": -0.021}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 23.35, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "BCC passivation alloy element; Tm = 2180 K."}, {"id": "met_15", "name": "Molybdenum", "formula": "Mo", "category": "Metals and alloys", "mw": 95.95, "eq_type": "shomate", "params": {"A": 22.0451, "B": 8.9452, "C": -2.451, "D": 0.582, "E": 0.0125}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 24.06, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Refractory BCC metal, high creep resistance; Tm = 2896 K."}, {"id": "met_16", "name": "Vanadium", "formula": "V", "category": "Metals and alloys", "mw": 50.942, "eq_type": "shomate", "params": {"A": 21.845, "B": 10.452, "C": -3.124, "D": 0.845, "E": -0.015}, "T_min": 298.15, "T_max": 2100.0, "Cp_298": 24.89, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "Microalloying element in HSLA steels; Tm = 2183 K."}, {"id": "met_17", "name": "Cobalt (alpha)", "formula": "Co", "category": "Metals and alloys", "mw": 58.933, "eq_type": "shomate", "params": {"A": 20.458, "B": 15.241, "C": -4.895, "D": 1.452, "E": 0.034}, "T_min": 298.15, "T_max": 700.0, "Cp_298": 24.81, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "HCP phase cobalt below allotropic transformation (700 K)."}, {"id": "met_18", "name": "Tantalum", "formula": "Ta", "category": "Metals and alloys", "mw": 180.948, "eq_type": "shomate", "params": {"A": 23.451, "B": 6.782, "C": -1.542, "D": 0.384, "E": 0.018}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 25.36, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Corrosion-resistant capacitor and chemical metal; Tm = 3290 K."}, {"id": "met_19", "name": "Niobium", "formula": "Nb", "category": "Metals and alloys", "mw": 92.906, "eq_type": "shomate", "params": {"A": 22.784, "B": 8.125, "C": -2.145, "D": 0.495, "E": 0.012}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 24.6, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Superconducting element and superalloy additive; Tm = 2750 K."}, {"id": "met_20", "name": "Zirconium (alpha)", "formula": "Zr", "category": "Metals and alloys", "mw": 91.224, "eq_type": "shomate", "params": {"A": 21.954, "B": 12.351, "C": -4.125, "D": 1.054, "E": -0.024}, "T_min": 298.15, "T_max": 1135.0, "Cp_298": 25.36, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Nuclear cladding metal with low neutron absorption."}, {"id": "met_21", "name": "Beryllium", "formula": "Be", "category": "Metals and alloys", "mw": 9.012, "eq_type": "shomate", "params": {"A": 10.125, "B": 32.41, "C": -15.84, "D": 3.12, "E": -0.15}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 16.44, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Low density (1.85 g/cm3), high Debye temperature."}, {"id": "met_22", "name": "Palladium", "formula": "Pd", "category": "Metals and alloys", "mw": 106.42, "eq_type": "shomate", "params": {"A": 23.124, "B": 8.945, "C": -2.314, "D": 0.654, "E": 0.019}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 25.98, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Hydrogen storage and catalytic transition metal; Tm = 1828 K."}, {"id": "met_23", "name": "Rhodium", "formula": "Rh", "category": "Metals and alloys", "mw": 102.91, "eq_type": "shomate", "params": {"A": 22.845, "B": 7.452, "C": -1.845, "D": 0.498, "E": 0.022}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 24.98, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Platinum-group metal for catalytic converters; Tm = 2237 K."}, {"id": "met_24", "name": "Iridium", "formula": "Ir", "category": "Metals and alloys", "mw": 192.22, "eq_type": "shomate", "params": {"A": 23.21, "B": 6.845, "C": -1.62, "D": 0.412, "E": 0.028}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 25.1, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Most corrosion-resistant metal; high modulus; Tm = 2719 K."}, {"id": "met_25", "name": "Stainless Steel AISI 304", "formula": "Fe-18Cr-8Ni", "category": "Metals and alloys", "mw": 55.2, "eq_type": "poly", "params": {"c0": 450.0, "c1": 0.28, "c2": -8.5e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1200.0, "Cp_298": 500.0, "unit": "J/(kg*K)", "source": "ASM Handbook Vol. 1 / Kim (1975)", "notes": "Standard 18/8 austenitic stainless steel."}, {"id": "met_26", "name": "Stainless Steel AISI 316L", "formula": "Fe-17Cr-12Ni-2.5Mo", "category": "Metals and alloys", "mw": 55.4, "eq_type": "poly", "params": {"c0": 460.0, "c1": 0.265, "c2": -7.5e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1250.0, "Cp_298": 502.0, "unit": "J/(kg*K)", "source": "ASM Handbook Vol. 1 / MatWeb Database", "notes": "Marine-grade molybdenum austenitic stainless steel."}, {"id": "met_27", "name": "Inconel 718", "formula": "Ni-19Cr-18Fe-5Nb-3Mo", "category": "Metals and alloys", "mw": 59.8, "eq_type": "poly", "params": {"c0": 405.0, "c1": 0.235, "c2": 4.5e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1300.0, "Cp_298": 435.0, "unit": "J/(kg*K)", "source": "Special Metals Corp. / Pottlacher et al. (2002)", "notes": "Precipitation-hardened gas turbine disc superalloy."}, {"id": "met_28", "name": "Inconel 625", "formula": "Ni-22Cr-9Mo-3.5Nb", "category": "Metals and alloys", "mw": 61.2, "eq_type": "poly", "params": {"c0": 390.0, "c1": 0.25, "c2": 3.5e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1350.0, "Cp_298": 410.0, "unit": "J/(kg*K)", "source": "Special Metals Corp. / NIST Materials Data", "notes": "Solid-solution strengthened marine and aerospace alloy."}, {"id": "met_29", "name": "Titanium Ti-6Al-4V (Gr 5)", "formula": "Ti-6Al-4V", "category": "Metals and alloys", "mw": 46.5, "eq_type": "poly", "params": {"c0": 510.0, "c1": 0.245, "c2": -4e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1250.0, "Cp_298": 526.0, "unit": "J/(kg*K)", "source": "Boivineau et al., Int. J. Thermophys. (2006)", "notes": "Workhorse aerospace structural titanium alloy."}, {"id": "met_30", "name": "Brass Cartridge (70Cu-30Zn)", "formula": "Cu70Zn30", "category": "Metals and alloys", "mw": 64.1, "eq_type": "poly", "params": {"c0": 355.0, "c1": 0.115, "c2": 2e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1100.0, "Cp_298": 375.0, "unit": "J/(kg*K)", "source": "Copper Development Assoc. (CDA) / Touloukian TPRC", "notes": "Alpha brass with superior cold-forming characteristics."}, {"id": "met_31", "name": "Phosphor Bronze (Cu-10Sn)", "formula": "Cu90Sn10", "category": "Metals and alloys", "mw": 69.06, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.12, "c2": 1.5e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1150.0, "Cp_298": 370.0, "unit": "J/(kg*K)", "source": "CDA / MatWeb Materials Database", "notes": "High fatigue limit alloy for springs and electrical switchgear."}, {"id": "met_32", "name": "Aluminum Alloy 6061-T6", "formula": "Al-1.0Mg-0.6Si", "category": "Metals and alloys", "mw": 26.9, "eq_type": "poly", "params": {"c0": 850.0, "c1": 0.48, "c2": -0.00012, "c3": 0.0}, "T_min": 273.15, "T_max": 800.0, "Cp_298": 896.0, "unit": "J/(kg*K)", "source": "Aluminum Association / MIL-HDBK-5J", "notes": "Structural aircraft and bicycle architectural alloy."}, {"id": "met_33", "name": "Aluminum Alloy 7075-T6", "formula": "Al-5.6Zn-2.5Mg-1.6Cu", "category": "Metals and alloys", "mw": 27.4, "eq_type": "poly", "params": {"c0": 860.0, "c1": 0.51, "c2": -0.00014, "c3": 0.0}, "T_min": 273.15, "T_max": 750.0, "Cp_298": 960.0, "unit": "J/(kg*K)", "source": "Alcoa Technical Data / Touloukian TPRC", "notes": "Ultra-high strength zinc-hardened aircraft wing spar alloy."}, {"id": "met_34", "name": "Nichrome 80/20", "formula": "Ni80Cr20", "category": "Metals and alloys", "mw": 57.35, "eq_type": "poly", "params": {"c0": 420.0, "c1": 0.16, "c2": 3e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1400.0, "Cp_298": 450.0, "unit": "J/(kg*K)", "source": "ASM Specialty Handbook: Nickel & Cobalt Alloys", "notes": "Industrial heating element alloy with stable chromia scale."}, {"id": "met_35", "name": "Hastelloy C-276", "formula": "Ni-16Mo-16Cr-4W-5Fe", "category": "Metals and alloys", "mw": 62.5, "eq_type": "poly", "params": {"c0": 395.0, "c1": 0.155, "c2": 2.5e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1300.0, "Cp_298": 427.0, "unit": "J/(kg*K)", "source": "Haynes International Technical Bulletin", "notes": "Severe wet chlorine / sour gas resistant superalloy."}, {"id": "cer_01", "name": "Alumina (Corundum)", "formula": "Al2O3", "category": "Ceramics", "mw": 101.96, "eq_type": "shomate", "params": {"A": 102.429, "B": 38.7498, "C": -15.9109, "D": 2.628181, "E": -3.007551}, "T_min": 298.15, "T_max": 2300.0, "Cp_298": 79.04, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Alpha-alumina corundum; hard dielectric substrate; Tm = 2345 K."}, {"id": "cer_02", "name": "Zirconia (monoclinic)", "formula": "ZrO2", "category": "Ceramics", "mw": 123.22, "eq_type": "shomate", "params": {"A": 69.62, "B": 14.56, "C": -4.21, "D": 0.85, "E": -1.15}, "T_min": 298.15, "T_max": 1478.0, "Cp_298": 56.21, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "Baddeleyite monoclinic phase below martensitic transformation."}, {"id": "cer_03", "name": "Titania (Rutile)", "formula": "TiO2", "category": "Ceramics", "mw": 79.866, "eq_type": "shomate", "params": {"A": 67.2511, "B": 18.021, "C": -8.954, "D": 1.745, "E": -1.245}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 55.04, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High refractive index tetragonal optical ceramic; Tm = 2116 K."}, {"id": "cer_04", "name": "Silicon Dioxide (alpha-Quartz)", "formula": "SiO2", "category": "Ceramics", "mw": 60.084, "eq_type": "shomate", "params": {"A": 53.9683, "B": 24.8845, "C": -10.985, "D": 2.145, "E": -0.845}, "T_min": 298.15, "T_max": 847.0, "Cp_298": 44.6, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Trigonal alpha-quartz below alpha-beta displacive transition (847 K)."}, {"id": "cer_05", "name": "Silicon Carbide (alpha)", "formula": "SiC", "category": "Ceramics", "mw": 40.1, "eq_type": "shomate", "params": {"A": 36.654, "B": 16.425, "C": -6.845, "D": 1.125, "E": -0.745}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 26.85, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Hexagonal 6H-SiC abrasive and high-power electronic ceramic."}, {"id": "cer_06", "name": "Silicon Nitride (beta)", "formula": "Si3N4", "category": "Ceramics", "mw": 140.28, "eq_type": "shomate", "params": {"A": 128.45, "B": 58.94, "C": -24.12, "D": 3.845, "E": -3.45}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 99.1, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High fracture toughness engineering ceramic for turbine balls."}, {"id": "cer_07", "name": "Boron Nitride (hexagonal)", "formula": "h-BN", "category": "Ceramics", "mw": 24.82, "eq_type": "shomate", "params": {"A": 22.45, "B": 28.94, "C": -14.12, "D": 2.845, "E": -0.25}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 19.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "White graphite layered ceramic; high thermal conductivity dielectric."}, {"id": "cer_08", "name": "Aluminum Nitride", "formula": "AlN", "category": "Ceramics", "mw": 40.99, "eq_type": "shomate", "params": {"A": 38.45, "B": 14.85, "C": -5.12, "D": 0.845, "E": -0.95}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 30.12, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Wurtzite lattice, high thermal conductivity (170-200 W/m-K)."}, {"id": "cer_09", "name": "Boron Carbide", "formula": "B4C", "category": "Ceramics", "mw": 55.25, "eq_type": "shomate", "params": {"A": 65.45, "B": 48.12, "C": -22.15, "D": 3.95, "E": -1.85}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 53.08, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Ultra-hard ceramic (30 GPa Vickers) for body armor tiles."}, {"id": "cer_10", "name": "Titanium Carbide", "formula": "TiC", "category": "Ceramics", "mw": 59.89, "eq_type": "shomate", "params": {"A": 44.52, "B": 12.45, "C": -4.21, "D": 0.65, "E": -0.85}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 33.81, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Rocksalt structured refractory carbide; Tm = 3430 K."}, {"id": "cer_11", "name": "Titanium Nitride", "formula": "TiN", "category": "Ceramics", "mw": 61.88, "eq_type": "shomate", "params": {"A": 43.12, "B": 11.85, "C": -3.95, "D": 0.58, "E": -0.78}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 37.11, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Golden hard coating ceramic for cutting tool wear protection."}, {"id": "cer_12", "name": "Tungsten Carbide", "formula": "WC", "category": "Ceramics", "mw": 195.85, "eq_type": "shomate", "params": {"A": 39.85, "B": 10.45, "C": -3.12, "D": 0.45, "E": -0.45}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 35.56, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Hexagonal cermet core ceramic for metal cutting inserts."}, {"id": "cer_13", "name": "Magnesium Oxide (Periclase)", "formula": "MgO", "category": "Ceramics", "mw": 40.304, "eq_type": "shomate", "params": {"A": 47.125, "B": 6.845, "C": -1.845, "D": 0.285, "E": -0.845}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 37.15, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Basic refractory oxide with rocksalt lattice; Tm = 3125 K."}, {"id": "cer_14", "name": "Calcium Oxide", "formula": "CaO", "category": "Ceramics", "mw": 56.077, "eq_type": "shomate", "params": {"A": 49.12, "B": 5.45, "C": -1.12, "D": 0.15, "E": -0.74}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 42.05, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Quicklime ceramic; Tm = 2886 K."}, {"id": "cer_15", "name": "Beryllium Oxide (Bromellite)", "formula": "BeO", "category": "Ceramics", "mw": 25.011, "eq_type": "shomate", "params": {"A": 37.45, "B": 12.85, "C": -4.85, "D": 0.75, "E": -1.12}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 25.56, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Ultra-high thermal conductivity electrical insulator; Tm = 2851 K."}, {"id": "cer_16", "name": "Zinc Oxide", "formula": "ZnO", "category": "Ceramics", "mw": 81.38, "eq_type": "shomate", "params": {"A": 45.12, "B": 8.95, "C": -2.85, "D": 0.45, "E": -0.58}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 40.25, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Wurtzite II-VI piezoceramic and varistor base."}, {"id": "cer_17", "name": "Yttrium Oxide (Yttria)", "formula": "Y2O3", "category": "Ceramics", "mw": 225.81, "eq_type": "shomate", "params": {"A": 105.45, "B": 22.85, "C": -7.45, "D": 1.12, "E": -1.45}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 102.5, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Cubic bixbyite stabilizer for YSZ thermal barrier coatings."}, {"id": "cer_18", "name": "Hematite (Ferric Oxide)", "formula": "Fe2O3", "category": "Ceramics", "mw": 159.69, "eq_type": "shomate", "params": {"A": 108.45, "B": 42.15, "C": -18.45, "D": 3.12, "E": -1.95}, "T_min": 298.15, "T_max": 950.0, "Cp_298": 103.85, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Alpha-Fe2O3 corundum lattice below Morin/Curie transitions."}, {"id": "cer_19", "name": "Magnetite", "formula": "Fe3O4", "category": "Ceramics", "mw": 231.53, "eq_type": "shomate", "params": {"A": 155.12, "B": 68.45, "C": -28.95, "D": 5.12, "E": -2.85}, "T_min": 298.15, "T_max": 850.0, "Cp_298": 150.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Inverse spinel ferrimagnetic oxide below Curie point (858 K)."}, {"id": "cer_20", "name": "Chromium(III) Oxide", "formula": "Cr2O3", "category": "Ceramics", "mw": 151.99, "eq_type": "shomate", "params": {"A": 109.12, "B": 28.45, "C": -9.85, "D": 1.45, "E": -1.85}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 118.7, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Eskolaite corundum structure; green pigment and hard protective scale."}, {"id": "cer_21", "name": "Barium Titanate", "formula": "BaTiO3", "category": "Ceramics", "mw": 233.19, "eq_type": "poly", "params": {"c0": 90.0, "c1": 0.055, "c2": -1e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1400.0, "Cp_298": 102.3, "unit": "J/(mol*K)", "source": "Perry's Chemical Engineers' Handbook / NIST", "notes": "Classic ferroelectric perovskite for MLCC capacitors."}, {"id": "cer_22", "name": "Lead Zirconate Titanate (PZT 52/48)", "formula": "PbZr0.52Ti0.48O3", "category": "Ceramics", "mw": 325.3, "eq_type": "poly", "params": {"c0": 320.0, "c1": 0.12, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 800.0, "Cp_298": 355.0, "unit": "J/(kg*K)", "source": "Jaffe et al. Piezoelectric Ceramics / MatWeb", "notes": "Morphotropic phase boundary piezoceramic for ultrasound transducers."}, {"id": "cer_23", "name": "Mullite", "formula": "3Al2O3-2SiO2", "category": "Ceramics", "mw": 426.05, "eq_type": "poly", "params": {"c0": 305.0, "c1": 0.125, "c2": -2e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1700.0, "Cp_298": 335.0, "unit": "J/(mol*K)", "source": "Robie & Hemingway, USGS Bulletin 2131", "notes": "High-temperature aluminosilicate refractory with low thermal expansion."}, {"id": "cer_24", "name": "Cordierite", "formula": "2MgO-2Al2O3-5SiO2", "category": "Ceramics", "mw": 584.99, "eq_type": "poly", "params": {"c0": 420.0, "c1": 0.195, "c2": -3e-05, "c3": 0.0}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 470.0, "unit": "J/(mol*K)", "source": "USGS Bulletin 2131 / MatWeb", "notes": "Ultra-low thermal expansion ceramic for catalytic converter honeycombs."}, {"id": "cer_25", "name": "Magnesium Aluminate Spinel", "formula": "MgAl2O4", "category": "Ceramics", "mw": 142.27, "eq_type": "shomate", "params": {"A": 138.45, "B": 32.15, "C": -11.45, "D": 1.65, "E": -2.85}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 116.3, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Transparent armor and optical dome ceramic; Tm = 2408 K."}, {"id": "cer_26", "name": "Forsterite", "formula": "Mg2SiO4", "category": "Ceramics", "mw": 140.69, "eq_type": "shomate", "params": {"A": 135.12, "B": 38.45, "C": -14.12, "D": 2.15, "E": -2.45}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 118.0, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / USGS Bulletin", "notes": "Orthorhombic magnesium olivine ceramic for high-frequency insulation."}, {"id": "cer_27", "name": "Steatite", "formula": "MgSiO3", "category": "Ceramics", "mw": 100.39, "eq_type": "poly", "params": {"c0": 78.0, "c1": 0.035, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 1400.0, "Cp_298": 82.5, "unit": "J/(mol*K)", "source": "Robie & Hemingway / MatWeb", "notes": "Talc-derived electrical insulator ceramic for high-voltage standoffs."}, {"id": "cer_28", "name": "Zircon", "formula": "ZrSiO4", "category": "Ceramics", "mw": 183.31, "eq_type": "shomate", "params": {"A": 112.45, "B": 24.12, "C": -8.15, "D": 1.15, "E": -1.85}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 98.65, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Zirconium silicate ceramic with high chemical stability against glass melt."}, {"id": "cer_29", "name": "Lanthanum(III) Oxide", "formula": "La2O3", "category": "Ceramics", "mw": 325.81, "eq_type": "shomate", "params": {"A": 115.45, "B": 22.15, "C": -7.15, "D": 1.05, "E": -1.45}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 108.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High-k gate dielectric and optical glass component; Tm = 2588 K."}, {"id": "cer_30", "name": "Cerium(IV) Oxide (Ceria)", "formula": "CeO2", "category": "Ceramics", "mw": 172.11, "eq_type": "shomate", "params": {"A": 66.45, "B": 14.12, "C": -4.85, "D": 0.72, "E": -0.85}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 61.63, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Fluorite lattice catalyst and SOFC solid oxide electrolyte."}, {"id": "cer_31", "name": "Strontium Titanate", "formula": "SrTiO3", "category": "Ceramics", "mw": 183.49, "eq_type": "poly", "params": {"c0": 85.0, "c1": 0.048, "c2": -8e-06, "c3": 0.0}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 98.4, "unit": "J/(mol*K)", "source": "Barin Thermochemical Data / Materials Project", "notes": "Cubic quantum paraelectric perovskite substrate for oxide epitaxy."}, {"id": "cer_32", "name": "Bismuth(III) Oxide", "formula": "Bi2O3", "category": "Ceramics", "mw": 465.96, "eq_type": "shomate", "params": {"A": 108.12, "B": 35.45, "C": -12.15, "D": 1.85, "E": -1.15}, "T_min": 298.15, "T_max": 1000.0, "Cp_298": 113.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High oxide-ion conducting solid electrolyte at elevated temperatures."}, {"id": "cer_33", "name": "Vanadium(V) Oxide", "formula": "V2O5", "category": "Ceramics", "mw": 181.88, "eq_type": "shomate", "params": {"A": 125.45, "B": 42.15, "C": -16.45, "D": 2.85, "E": -1.65}, "T_min": 298.15, "T_max": 950.0, "Cp_298": 130.3, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Layered catalyst and electrochromic insertion compound; Tm = 963 K."}, {"id": "cer_34", "name": "Tin(IV) Oxide (Cassiterite)", "formula": "SnO2", "category": "Ceramics", "mw": 150.71, "eq_type": "shomate", "params": {"A": 65.12, "B": 16.45, "C": -5.85, "D": 0.85, "E": -1.15}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 52.6, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Tetragonal rutile n-type semiconductor for gas sensors and TCOs."}, {"id": "cer_35", "name": "Hafnium(IV) Oxide (Hafnia)", "formula": "HfO2", "category": "Ceramics", "mw": 210.49, "eq_type": "shomate", "params": {"A": 71.45, "B": 12.85, "C": -3.85, "D": 0.58, "E": -1.25}, "T_min": 298.15, "T_max": 2200.0, "Cp_298": 60.25, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High-k gate oxide replacing SiO2 in sub-45nm CMOS logic nodes."}, {"id": "semi_01", "name": "Silicon (crystalline)", "formula": "Si", "category": "Semiconductors", "mw": 28.085, "eq_type": "shomate", "params": {"A": 22.81719, "B": 3.89951, "C": -0.854, "D": 0.1285, "E": -0.1534}, "T_min": 298.15, "T_max": 1687.0, "Cp_298": 20.0, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Diamond cubic lattice; premier semiconductor for CMOS microelectronics; Tm = 1687 K."}, {"id": "semi_02", "name": "Germanium", "formula": "Ge", "category": "Semiconductors", "mw": 72.63, "eq_type": "shomate", "params": {"A": 23.451, "B": 4.851, "C": -1.214, "D": 0.215, "E": -0.0845}, "T_min": 298.15, "T_max": 1211.4, "Cp_298": 23.22, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High hole mobility group IV semiconductor for IR optics and detectors."}, {"id": "semi_03", "name": "Gallium Arsenide", "formula": "GaAs", "category": "Semiconductors", "mw": 144.64, "eq_type": "shomate", "params": {"A": 44.52, "B": 10.85, "C": -3.45, "D": 0.51, "E": -0.32}, "T_min": 298.15, "T_max": 1511.0, "Cp_298": 46.2, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Direct bandgap (1.42 eV) zincblende compound for RF/optoelectronics."}, {"id": "semi_04", "name": "Gallium Nitride", "formula": "GaN", "category": "Semiconductors", "mw": 83.73, "eq_type": "shomate", "params": {"A": 38.45, "B": 12.15, "C": -4.12, "D": 0.65, "E": -0.45}, "T_min": 298.15, "T_max": 1700.0, "Cp_298": 35.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Wide bandgap (3.4 eV) wurtzite semiconductor for blue LEDs and power transistors."}, {"id": "semi_05", "name": "Indium Phosphide", "formula": "InP", "category": "Semiconductors", "mw": 145.79, "eq_type": "shomate", "params": {"A": 43.85, "B": 11.45, "C": -3.85, "D": 0.58, "E": -0.28}, "T_min": 298.15, "T_max": 1335.0, "Cp_298": 45.4, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High electron velocity substrate for fiber optic lasers and THz devices."}, {"id": "semi_06", "name": "Cadmium Telluride", "formula": "CdTe", "category": "Semiconductors", "mw": 240.01, "eq_type": "shomate", "params": {"A": 47.12, "B": 7.85, "C": -2.15, "D": 0.32, "E": -0.15}, "T_min": 298.15, "T_max": 1365.0, "Cp_298": 50.21, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Direct bandgap (1.5 eV) thin-film photovoltaic absorber material."}, {"id": "semi_07", "name": "Cadmium Sulfide", "formula": "CdS", "category": "Semiconductors", "mw": 144.48, "eq_type": "shomate", "params": {"A": 45.85, "B": 9.45, "C": -2.85, "D": 0.42, "E": -0.21}, "T_min": 298.15, "T_max": 1600.0, "Cp_298": 47.3, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "II-VI buffer layer semiconductor for CIGS solar cells."}, {"id": "semi_08", "name": "Zinc Selenide", "formula": "ZnSe", "category": "Semiconductors", "mw": 144.35, "eq_type": "shomate", "params": {"A": 46.12, "B": 8.45, "C": -2.45, "D": 0.38, "E": -0.18}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 47.9, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Wide bandgap (2.7 eV) optical window for high-power CO2 lasers."}, {"id": "semi_09", "name": "Zinc Sulfide", "formula": "ZnS", "category": "Semiconductors", "mw": 97.47, "eq_type": "shomate", "params": {"A": 44.25, "B": 10.15, "C": -3.15, "D": 0.48, "E": -0.25}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 45.6, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Sphalerite/wurtzite phosphorescent phosphor and IR dome material."}, {"id": "semi_10", "name": "Indium Arsenide", "formula": "InAs", "category": "Semiconductors", "mw": 189.74, "eq_type": "shomate", "params": {"A": 45.12, "B": 9.85, "C": -2.95, "D": 0.44, "E": -0.22}, "T_min": 298.15, "T_max": 1215.0, "Cp_298": 47.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Narrow bandgap (0.35 eV) high mobility semiconductor for MWIR detectors."}, {"id": "semi_11", "name": "Indium Antimonide", "formula": "InSb", "category": "Semiconductors", "mw": 236.58, "eq_type": "shomate", "params": {"A": 46.85, "B": 8.15, "C": -2.25, "D": 0.34, "E": -0.16}, "T_min": 298.15, "T_max": 800.0, "Cp_298": 49.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Highest room-temperature electron mobility (77,000 cm2/Vs) semiconductor."}, {"id": "semi_12", "name": "Gallium Antimonide", "formula": "GaSb", "category": "Semiconductors", "mw": 191.48, "eq_type": "shomate", "params": {"A": 45.95, "B": 9.12, "C": -2.65, "D": 0.39, "E": -0.19}, "T_min": 298.15, "T_max": 985.0, "Cp_298": 48.5, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Zincblende substrate for mid-IR thermophotovoltaic cells."}, {"id": "semi_13", "name": "Aluminum Arsenide", "formula": "AlAs", "category": "Semiconductors", "mw": 101.9, "eq_type": "shomate", "params": {"A": 43.12, "B": 11.85, "C": -3.85, "D": 0.58, "E": -0.29}, "T_min": 298.15, "T_max": 1600.0, "Cp_298": 44.3, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Lattice-matched barrier material for GaAs/AlGaAs quantum heterostructures."}, {"id": "semi_14", "name": "Aluminum Antimonide", "formula": "AlSb", "category": "Semiconductors", "mw": 148.74, "eq_type": "shomate", "params": {"A": 44.85, "B": 9.85, "C": -2.95, "D": 0.44, "E": -0.21}, "T_min": 298.15, "T_max": 1330.0, "Cp_298": 46.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Indirect bandgap (1.6 eV) compound for high-temperature radiation detectors."}, {"id": "semi_15", "name": "Lead Telluride", "formula": "PbTe", "category": "Semiconductors", "mw": 334.8, "eq_type": "shomate", "params": {"A": 48.45, "B": 6.85, "C": -1.85, "D": 0.28, "E": -0.12}, "T_min": 298.15, "T_max": 1197.0, "Cp_298": 50.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "Narrow gap IV-VI rocksalt semiconductor; benchmark thermoelectric material."}, {"id": "semi_16", "name": "Lead Sulfide (Galena)", "formula": "PbS", "category": "Semiconductors", "mw": 239.3, "eq_type": "shomate", "params": {"A": 46.95, "B": 8.45, "C": -2.45, "D": 0.36, "E": -0.17}, "T_min": 298.15, "T_max": 1387.0, "Cp_298": 49.5, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Natural rocksalt semiconductor for uncooled SWIR photoconductive sensors."}, {"id": "semi_17", "name": "Lead Selenide", "formula": "PbSe", "category": "Semiconductors", "mw": 286.2, "eq_type": "shomate", "params": {"A": 47.85, "B": 7.45, "C": -2.05, "D": 0.31, "E": -0.14}, "T_min": 298.15, "T_max": 1350.0, "Cp_298": 50.1, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "IV-VI semiconductor for MWIR focal plane arrays and lasers."}, {"id": "semi_18", "name": "Bismuth Telluride", "formula": "Bi2Te3", "category": "Semiconductors", "mw": 800.76, "eq_type": "poly", "params": {"c0": 118.0, "c1": 0.025, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 858.0, "Cp_298": 125.5, "unit": "J/(mol*K)", "source": "Goldsmid, Thermoelectric Refrigeration / CRC", "notes": "Benchmark room-temperature Peltier thermoelectric cooling material."}, {"id": "semi_19", "name": "Antimony Telluride", "formula": "Sb2Te3", "category": "Semiconductors", "mw": 626.32, "eq_type": "poly", "params": {"c0": 116.0, "c1": 0.028, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 890.0, "Cp_298": 124.0, "unit": "J/(mol*K)", "source": "CRC Handbook of Chemistry and Physics / MatWeb", "notes": "Rhombohedral topological insulator and p-type thermoelectric alloy."}, {"id": "semi_20", "name": "Silicon Carbide (4H-SiC)", "formula": "SiC", "category": "Semiconductors", "mw": 40.1, "eq_type": "shomate", "params": {"A": 36.85, "B": 16.21, "C": -6.75, "D": 1.1, "E": -0.72}, "T_min": 298.15, "T_max": 2000.0, "Cp_298": 26.9, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Wide bandgap (3.26 eV) hexagonal SiC for high-voltage power MOSFETs."}, {"id": "semi_21", "name": "beta-Gallium Oxide", "formula": "Ga2O3", "category": "Semiconductors", "mw": 187.44, "eq_type": "shomate", "params": {"A": 105.12, "B": 28.45, "C": -9.85, "D": 1.45, "E": -1.85}, "T_min": 298.15, "T_max": 1800.0, "Cp_298": 92.15, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Ultra-wide bandgap (4.8 eV) monoclinic oxide for next-gen power converters."}, {"id": "semi_22", "name": "Diamond (Carbon)", "formula": "C", "category": "Semiconductors", "mw": 12.011, "eq_type": "shomate", "params": {"A": -1.025, "B": 38.45, "C": -24.12, "D": 5.45, "E": 0.045}, "T_min": 298.15, "T_max": 1500.0, "Cp_298": 6.115, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Extreme Debye temperature (2220 K), highest room-T thermal conductivity (2200 W/m-K)."}, {"id": "semi_23", "name": "Copper Indium Diselenide", "formula": "CuInSe2", "category": "Semiconductors", "mw": 336.28, "eq_type": "poly", "params": {"c0": 95.0, "c1": 0.022, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 900.0, "Cp_298": 101.5, "unit": "J/(mol*K)", "source": "Rincon et al., Phys. Status Solidi / MatWeb", "notes": "Chalcopyrite high-efficiency thin-film solar cell absorber."}, {"id": "semi_24", "name": "Molybdenum Disulfide", "formula": "MoS2", "category": "Semiconductors", "mw": 160.07, "eq_type": "shomate", "params": {"A": 65.45, "B": 14.85, "C": -4.85, "D": 0.72, "E": -0.85}, "T_min": 298.15, "T_max": 1200.0, "Cp_298": 63.5, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "2D transition metal dichalcogenide semiconductor and solid lubricant."}, {"id": "semi_25", "name": "Tungsten Disulfide", "formula": "WS2", "category": "Semiconductors", "mw": 247.97, "eq_type": "shomate", "params": {"A": 68.12, "B": 12.45, "C": -3.95, "D": 0.58, "E": -0.75}, "T_min": 298.15, "T_max": 1200.0, "Cp_298": 65.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Layered 2D semiconducting material with high photoluminescence yield."}, {"id": "poly_01", "name": "High Density Polyethylene (HDPE)", "formula": "-(C2H4)n-", "category": "Polymers", "mw": 28.05, "eq_type": "poly", "params": {"c0": 1300.0, "c1": 3.8, "c2": -0.0012, "c3": 0.0}, "T_min": 200.0, "T_max": 390.0, "Cp_298": 1850.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Wunderlich ATHAS Database", "notes": "Semi-crystalline linear polyolefin; Tg ~ 150 K, Tm ~ 405 K."}, {"id": "poly_02", "name": "Low Density Polyethylene (LDPE)", "formula": "-(C2H4)n-", "category": "Polymers", "mw": 28.05, "eq_type": "poly", "params": {"c0": 1400.0, "c1": 4.1, "c2": -0.0015, "c3": 0.0}, "T_min": 200.0, "T_max": 375.0, "Cp_298": 2100.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / ATHAS Polymer Database", "notes": "Branched polyolefin with higher chain flexibility and lower crystallinity."}, {"id": "poly_03", "name": "Polypropylene (Isotactic PP)", "formula": "-(C3H6)n-", "category": "Polymers", "mw": 42.08, "eq_type": "poly", "params": {"c0": 1200.0, "c1": 3.5, "c2": -0.0009, "c3": 0.0}, "T_min": 220.0, "T_max": 420.0, "Cp_298": 1920.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Wunderlich ATHAS", "notes": "Semi-crystalline commodity thermoplastic; Tm ~ 438 K."}, {"id": "poly_04", "name": "Polystyrene (Atactic PS)", "formula": "-(C8H8)n-", "category": "Polymers", "mw": 104.15, "eq_type": "poly", "params": {"c0": 850.0, "c1": 2.65, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 365.0, "Cp_298": 1220.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Brandrup Polymer Handbook", "notes": "Amorphous glass-clear polymer; glass transition Tg ~ 373 K (100 C)."}, {"id": "poly_05", "name": "Poly(vinyl chloride) (PVC)", "formula": "-(C2H3Cl)n-", "category": "Polymers", "mw": 62.5, "eq_type": "poly", "params": {"c0": 800.0, "c1": 2.4, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 350.0, "Cp_298": 1150.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Polymer Handbook", "notes": "Rigid halogenated polymer for piping; Tg ~ 355 K (82 C)."}, {"id": "poly_06", "name": "Poly(tetrafluoroethylene) (PTFE)", "formula": "-(C2F4)n-", "category": "Polymers", "mw": 100.02, "eq_type": "poly", "params": {"c0": 700.0, "c1": 2.2, "c2": -0.0004, "c3": 0.0}, "T_min": 200.0, "T_max": 550.0, "Cp_298": 1050.0, "unit": "J/(kg*K)", "source": "PoLyInfo / DuPont Teflon Technical Data", "notes": "Fluoropolymer with exceptional chemical inertness and low friction; Tm ~ 600 K."}, {"id": "poly_07", "name": "Poly(methyl methacrylate) (PMMA)", "formula": "-(C5H8O2)n-", "category": "Polymers", "mw": 100.12, "eq_type": "poly", "params": {"c0": 950.0, "c1": 2.85, "c2": -0.0007, "c3": 0.0}, "T_min": 200.0, "T_max": 370.0, "Cp_298": 1420.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / ATHAS Database", "notes": "Transparent acrylic glass (Plexiglas); Tg ~ 378 K (105 C)."}, {"id": "poly_08", "name": "Polycarbonate (Bisphenol A PC)", "formula": "-(C16H14O3)n-", "category": "Polymers", "mw": 254.28, "eq_type": "poly", "params": {"c0": 820.0, "c1": 2.5, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 410.0, "Cp_298": 1200.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Lexan Technical Manual", "notes": "High impact resistance amorphous engineering polymer; Tg ~ 420 K (147 C)."}, {"id": "poly_09", "name": "Poly(ethylene terephthalate) (PET)", "formula": "-(C10H8O4)n-", "category": "Polymers", "mw": 192.17, "eq_type": "poly", "params": {"c0": 880.0, "c1": 2.7, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 500.0, "Cp_298": 1300.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Polymer Handbook", "notes": "Semi-crystalline polyester for beverage containers and synthetic fibers."}, {"id": "poly_10", "name": "Polyether ether ketone (PEEK)", "formula": "-(C19H12O3)n-", "category": "Polymers", "mw": 288.3, "eq_type": "poly", "params": {"c0": 920.0, "c1": 2.8, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 580.0, "Cp_298": 1340.0, "unit": "J/(kg*K)", "source": "Victrex PEEK Materials Data / PoLyInfo", "notes": "High-performance semicrystalline polymer; continuous service up to 520 K."}, {"id": "poly_11", "name": "Polyimide (Kapton)", "formula": "-(C22H10N2O5)n-", "category": "Polymers", "mw": 382.33, "eq_type": "poly", "params": {"c0": 780.0, "c1": 2.3, "c2": -0.0004, "c3": 0.0}, "T_min": 200.0, "T_max": 650.0, "Cp_298": 1090.0, "unit": "J/(kg*K)", "source": "DuPont Kapton Summary / PoLyInfo", "notes": "Aromatic polyimide film for aerospace thermal insulation blankets."}, {"id": "poly_12", "name": "Polyamide 6 (Nylon 6)", "formula": "-(C6H11NO)n-", "category": "Polymers", "mw": 113.16, "eq_type": "poly", "params": {"c0": 1100.0, "c1": 3.2, "c2": -0.0008, "c3": 0.0}, "T_min": 200.0, "T_max": 470.0, "Cp_298": 1600.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / BASF Ultramid Data", "notes": "Semi-crystalline polyamide with strong hydrogen bonding; Tm ~ 495 K."}, {"id": "poly_13", "name": "Polyamide 6,6 (Nylon 66)", "formula": "-(C12H22N2O2)n-", "category": "Polymers", "mw": 226.32, "eq_type": "poly", "params": {"c0": 1150.0, "c1": 3.3, "c2": -0.0008, "c3": 0.0}, "T_min": 200.0, "T_max": 500.0, "Cp_298": 1670.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / DuPont Zytel Data", "notes": "Higher melting nylon engineered for automotive under-the-hood parts; Tm ~ 533 K."}, {"id": "poly_14", "name": "Polyoxymethylene (POM Acetal)", "formula": "-(CH2O)n-", "category": "Polymers", "mw": 30.03, "eq_type": "poly", "params": {"c0": 1050.0, "c1": 3.1, "c2": -0.0007, "c3": 0.0}, "T_min": 200.0, "T_max": 430.0, "Cp_298": 1470.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Celanese Hostaform", "notes": "High-stiffness low-friction engineering polyacetal for precision gears."}, {"id": "poly_15", "name": "Thermoplastic Polyurethane (TPU)", "formula": "-(C25H32N2O6)n-", "category": "Polymers", "mw": 456.53, "eq_type": "poly", "params": {"c0": 1200.0, "c1": 3.6, "c2": -0.001, "c3": 0.0}, "T_min": 200.0, "T_max": 400.0, "Cp_298": 1800.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Bayer Desmopan Manual", "notes": "Segmented block copolymer elastomer with excellent abrasion resistance."}, {"id": "poly_16", "name": "Epoxy Resin (Bisphenol A/Amine)", "formula": "C21H24O4 crosslinked", "category": "Polymers", "mw": 340.41, "eq_type": "poly", "params": {"c0": 850.0, "c1": 2.45, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1250.0, "unit": "J/(kg*K)", "source": "ATHAS Database / Hexcel Composites Manual", "notes": "Thermosetting resin matrix for high-performance CFRP aerospace composites."}, {"id": "poly_17", "name": "Phenolic Resin (Bakelite)", "formula": "C7H6O crosslinked", "category": "Polymers", "mw": 106.12, "eq_type": "poly", "params": {"c0": 800.0, "c1": 2.25, "c2": -0.0004, "c3": 0.0}, "T_min": 200.0, "T_max": 450.0, "Cp_298": 1180.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Mark's Standard Handbook", "notes": "First synthetic thermoset plastic; outstanding flame and heat resistance."}, {"id": "poly_18", "name": "Polydimethylsiloxane (PDMS)", "formula": "-(Si(CH3)2O)n-", "category": "Polymers", "mw": 74.15, "eq_type": "poly", "params": {"c0": 1100.0, "c1": 2.8, "c2": -0.0005, "c3": 0.0}, "T_min": 180.0, "T_max": 450.0, "Cp_298": 1460.0, "unit": "J/(kg*K)", "source": "Dow Corning Silicone Handbook / PoLyInfo", "notes": "Silicone rubber elastomer with flexible siloxane backbone; Tg ~ 150 K."}, {"id": "poly_19", "name": "Natural Rubber (cis-Polyisoprene)", "formula": "-(C5H8)n-", "category": "Polymers", "mw": 68.12, "eq_type": "poly", "params": {"c0": 1350.0, "c1": 3.9, "c2": -0.0011, "c3": 0.0}, "T_min": 200.0, "T_max": 350.0, "Cp_298": 1880.0, "unit": "J/(kg*K)", "source": "PoLyInfo / Rubber Division ACS Data", "notes": "High-elasticity natural elastomer; strain-induced crystallization."}, {"id": "poly_20", "name": "Polychloroprene (Neoprene)", "formula": "-(C4H5Cl)n-", "category": "Polymers", "mw": 88.54, "eq_type": "poly", "params": {"c0": 1250.0, "c1": 3.4, "c2": -0.0009, "c3": 0.0}, "T_min": 200.0, "T_max": 360.0, "Cp_298": 1720.0, "unit": "J/(kg*K)", "source": "DuPont Elastomers / PoLyInfo", "notes": "Synthetic rubber resistant to oil, weather, and ozone degradation."}, {"id": "poly_21", "name": "Poly(vinylidene fluoride) (PVDF)", "formula": "-(C2H2F2)n-", "category": "Polymers", "mw": 64.03, "eq_type": "poly", "params": {"c0": 900.0, "c1": 2.7, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 430.0, "Cp_298": 1300.0, "unit": "J/(kg*K)", "source": "Arkema Kynar Data / PoLyInfo", "notes": "Piezoelectric and ferroelectric semi-crystalline fluoropolymer."}, {"id": "poly_22", "name": "Acrylonitrile Butadiene Styrene (ABS)", "formula": "Terpolymer", "category": "Polymers", "mw": 100.0, "eq_type": "poly", "params": {"c0": 980.0, "c1": 2.9, "c2": -0.0007, "c3": 0.0}, "T_min": 200.0, "T_max": 370.0, "Cp_298": 1400.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Sabic Cycolac Data", "notes": "Tough engineering terpolymer widely used in 3D printing filaments and enclosures."}, {"id": "poly_23", "name": "Polyacrylonitrile (PAN)", "formula": "-(C3H3N)n-", "category": "Polymers", "mw": 53.06, "eq_type": "poly", "params": {"c0": 920.0, "c1": 2.75, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1320.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / Polymer Handbook", "notes": "Precursor polymer for carbon fiber manufacturing."}, {"id": "poly_24", "name": "Polycaprolactone (PCL)", "formula": "-(C6H10O2)n-", "category": "Polymers", "mw": 114.14, "eq_type": "poly", "params": {"c0": 1150.0, "c1": 3.45, "c2": -0.001, "c3": 0.0}, "T_min": 200.0, "T_max": 330.0, "Cp_298": 1680.0, "unit": "J/(kg*K)", "source": "PoLyInfo (NIMS) / ATHAS Database", "notes": "Biodegradable polyester with low melting point (Tm ~ 333 K / 60 C)."}, {"id": "poly_25", "name": "Poly(lactic acid) (PLA)", "formula": "-(C3H4O2)n-", "category": "Polymers", "mw": 72.06, "eq_type": "poly", "params": {"c0": 1050.0, "c1": 3.15, "c2": -0.0008, "c3": 0.0}, "T_min": 200.0, "T_max": 380.0, "Cp_298": 1500.0, "unit": "J/(kg*K)", "source": "NatureWorks Ingeo / PoLyInfo", "notes": "Bio-derived renewable thermoplastic for packaging and FDM 3D printing."}, {"id": "poly_26", "name": "Poly(ether sulfone) (PES)", "formula": "-(C12H8O3S)n-", "category": "Polymers", "mw": 232.26, "eq_type": "poly", "params": {"c0": 840.0, "c1": 2.35, "c2": -0.0004, "c3": 0.0}, "T_min": 200.0, "T_max": 480.0, "Cp_298": 1150.0, "unit": "J/(kg*K)", "source": "Solvay Radel Data / PoLyInfo", "notes": "High-temperature amorphous sulfone polymer; Tg ~ 498 K (225 C)."}, {"id": "poly_27", "name": "Poly(phenylene sulfide) (PPS)", "formula": "-(C6H4S)n-", "category": "Polymers", "mw": 108.16, "eq_type": "poly", "params": {"c0": 820.0, "c1": 2.4, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 520.0, "Cp_298": 1100.0, "unit": "J/(kg*K)", "source": "Chevron Phillips Ryton / PoLyInfo", "notes": "Semi-crystalline polymer with exceptional chemical resistance; Tm ~ 558 K."}, {"id": "poly_28", "name": "Poly(vinyl alcohol) (PVA)", "formula": "-(C2H4O)n-", "category": "Polymers", "mw": 44.05, "eq_type": "poly", "params": {"c0": 1180.0, "c1": 3.5, "c2": -0.0009, "c3": 0.0}, "T_min": 200.0, "T_max": 380.0, "Cp_298": 1650.0, "unit": "J/(kg*K)", "source": "Kuraray Poval Data / PoLyInfo", "notes": "Water-soluble synthetic polymer for packaging films and adhesive paper."}, {"id": "poly_29", "name": "Cellulose Acetate", "formula": "Polymer derivative", "category": "Polymers", "mw": 250.0, "eq_type": "poly", "params": {"c0": 1020.0, "c1": 3.0, "c2": -0.0007, "c3": 0.0}, "T_min": 200.0, "T_max": 400.0, "Cp_298": 1450.0, "unit": "J/(kg*K)", "source": "Eastman Chemical / Polymer Handbook", "notes": "Cellulose ester used in spectacle frames and photographic film bases."}, {"id": "poly_30", "name": "Fluorinated Ethylene Propylene (FEP)", "formula": "-(C2F4)m-(C3F6)n-", "category": "Polymers", "mw": 100.0, "eq_type": "poly", "params": {"c0": 750.0, "c1": 2.3, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 520.0, "Cp_298": 1120.0, "unit": "J/(kg*K)", "source": "DuPont FEP Technical Bulletin / PoLyInfo", "notes": "Melt-processable fluoropolymer with dielectric properties matching PTFE."}, {"id": "gla_01", "name": "Fused Silica Glass", "formula": "SiO2 (amorphous)", "category": "Glasses", "mw": 60.084, "eq_type": "poly", "params": {"c0": 480.0, "c1": 1.15, "c2": -0.00045, "c3": 0.0}, "T_min": 200.0, "T_max": 1400.0, "Cp_298": 740.0, "unit": "J/(kg*K)", "source": "Corning Glass Data / Touloukian TPRC Series Vol. 5", "notes": "Pure vitreous silica with near-zero CTE (0.5e-6 /K) and high UV transmission."}, {"id": "gla_02", "name": "Borosilicate Glass (Pyrex 7740)", "formula": "81SiO2-13B2O3-4Na2O-2Al2O3", "category": "Glasses", "mw": 63.5, "eq_type": "poly", "params": {"c0": 520.0, "c1": 1.05, "c2": -0.00038, "c3": 0.0}, "T_min": 200.0, "T_max": 800.0, "Cp_298": 750.0, "unit": "J/(kg*K)", "source": "Corning 7740 Data Sheet / MatWeb", "notes": "Thermal-shock resistant laboratory glassware; Tg ~ 833 K (560 C)."}, {"id": "gla_03", "name": "Soda-Lime-Silica Float Glass", "formula": "72SiO2-14Na2O-10CaO-4MgO", "category": "Glasses", "mw": 65.8, "eq_type": "poly", "params": {"c0": 580.0, "c1": 0.95, "c2": -0.00032, "c3": 0.0}, "T_min": 200.0, "T_max": 850.0, "Cp_298": 840.0, "unit": "J/(kg*K)", "source": "Pilkington Glass Technical Manual / SciGlass", "notes": "Standard architectural window and container glass; Tg ~ 840 K."}, {"id": "gla_04", "name": "Aluminosilicate Glass", "formula": "62SiO2-18Al2O3-10CaO-10MgO", "category": "Glasses", "mw": 68.2, "eq_type": "poly", "params": {"c0": 550.0, "c1": 1.02, "c2": -0.00035, "c3": 0.0}, "T_min": 200.0, "T_max": 950.0, "Cp_298": 810.0, "unit": "J/(kg*K)", "source": "Corning Technical Materials / SciGlass", "notes": "High-temperature resistant glass for halogen lamp envelopes."}, {"id": "gla_05", "name": "Lead Crystal Glass (Heavy Flint)", "formula": "45SiO2-45PbO-10K2O", "category": "Glasses", "mw": 125.0, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.58, "c2": -0.00018, "c3": 0.0}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 480.0, "unit": "J/(kg*K)", "source": "Schott Optical Glass Catalog (SF6)", "notes": "High refractive index (nd = 1.805) dense flint glass for radiation shielding."}, {"id": "gla_06", "name": "BK7 Optical Crown Glass", "formula": "Borosilicate Optical", "category": "Glasses", "mw": 64.2, "eq_type": "poly", "params": {"c0": 570.0, "c1": 0.98, "c2": -0.00034, "c3": 0.0}, "T_min": 200.0, "T_max": 800.0, "Cp_298": 820.0, "unit": "J/(kg*K)", "source": "Schott N-BK7 Optical Glass Data Sheet", "notes": "Standard precision optical crown glass for lenses and prisms; nd = 1.5168."}, {"id": "gla_07", "name": "Phosphate Laser Glass (LHG-8)", "formula": "Phosphate Matrix", "category": "Glasses", "mw": 95.0, "eq_type": "poly", "params": {"c0": 500.0, "c1": 0.88, "c2": -0.00028, "c3": 0.0}, "T_min": 200.0, "T_max": 700.0, "Cp_298": 720.0, "unit": "J/(kg*K)", "source": "Hoya Laser Glass Technical Guide", "notes": "Nd-doped laser host glass for high-energy fusion laser amplifiers."}, {"id": "gla_08", "name": "Chalcogenide Glass (Ge33As12Se55)", "formula": "Ge33As12Se55", "category": "Glasses", "mw": 102.5, "eq_type": "poly", "params": {"c0": 260.0, "c1": 0.42, "c2": -0.00012, "c3": 0.0}, "T_min": 200.0, "T_max": 550.0, "Cp_298": 360.0, "unit": "J/(kg*K)", "source": "Amorphous Materials Inc. (AMTIR-1) / SciGlass", "notes": "Far-infrared transmitting glass (2 - 14 um) for thermal imaging optics."}, {"id": "gla_09", "name": "Vycor 96% Silica Glass (Corning 7913)", "formula": "96SiO2-4B2O3", "category": "Glasses", "mw": 60.5, "eq_type": "poly", "params": {"c0": 490.0, "c1": 1.12, "c2": -0.00042, "c3": 0.0}, "T_min": 200.0, "T_max": 1200.0, "Cp_298": 745.0, "unit": "J/(kg*K)", "source": "Corning Code 7913 Data Sheet", "notes": "Leached phase-separated borosilicate reconstituted to pure silica properties."}, {"id": "gla_10", "name": "Fluorozirconate Glass (ZBLAN)", "formula": "53ZrF4-20BaF2-4LaF3-3AlF3-20NaF", "category": "Glasses", "mw": 145.0, "eq_type": "poly", "params": {"c0": 410.0, "c1": 0.65, "c2": -0.0002, "c3": 0.0}, "T_min": 200.0, "T_max": 580.0, "Cp_298": 560.0, "unit": "J/(kg*K)", "source": "Lucas et al., Fluoride Glasses / MatWeb", "notes": "Mid-IR transmitting heavy metal fluoride glass for optical fiber lasers."}, {"id": "gla_11", "name": "Bioactive Glass 45S5 (Bioglass)", "formula": "45SiO2-24.5CaO-24.5Na2O-6P2O5", "category": "Glasses", "mw": 68.0, "eq_type": "poly", "params": {"c0": 600.0, "c1": 0.92, "c2": -0.0003, "c3": 0.0}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 830.0, "unit": "J/(kg*K)", "source": "Hench, Bioceramics / J. Biomed. Mater. Res.", "notes": "Osteoconductive glass forming hydroxycarbonate apatite bond to living bone."}, {"id": "gla_12", "name": "Gorilla Glass (Alkali-Aluminosilicate)", "formula": "Na2O-Al2O3-SiO2", "category": "Glasses", "mw": 67.5, "eq_type": "poly", "params": {"c0": 560.0, "c1": 1.0, "c2": -0.00034, "c3": 0.0}, "T_min": 200.0, "T_max": 850.0, "Cp_298": 815.0, "unit": "J/(kg*K)", "source": "Corning Gorilla Glass Technical Specification", "notes": "Ion-exchange strengthened chemically tempered glass for smartphones."}, {"id": "gla_13", "name": "E-Glass (Fiber Precursor)", "formula": "54SiO2-14Al2O3-22CaO-8B2O3", "category": "Glasses", "mw": 67.0, "eq_type": "poly", "params": {"c0": 570.0, "c1": 0.96, "c2": -0.00033, "c3": 0.0}, "T_min": 200.0, "T_max": 900.0, "Cp_298": 810.0, "unit": "J/(kg*K)", "source": "Owens Corning Fiberglas Data / MatWeb", "notes": "Low alkali electrical grade continuous glass fibers for polymer reinforcement."}, {"id": "gla_14", "name": "S-Glass (High Strength)", "formula": "65SiO2-25Al2O3-10MgO", "category": "Glasses", "mw": 66.5, "eq_type": "poly", "params": {"c0": 540.0, "c1": 1.04, "c2": -0.00036, "c3": 0.0}, "T_min": 200.0, "T_max": 1000.0, "Cp_298": 790.0, "unit": "J/(kg*K)", "source": "AGY High Performance Materials / SciGlass", "notes": "Magnesium aluminosilicate fiber glass with high tensile strength."}, {"id": "gla_15", "name": "Obsidian (Natural Volcanic Glass)", "formula": "73SiO2-13Al2O3-4Na2O-4K2O-3FeOx", "category": "Glasses", "mw": 66.8, "eq_type": "poly", "params": {"c0": 560.0, "c1": 0.95, "c2": -0.00031, "c3": 0.0}, "T_min": 200.0, "T_max": 900.0, "Cp_298": 800.0, "unit": "J/(kg*K)", "source": "USGS Mineral Data / Carmichael (1979)", "notes": "Naturally occurring felsic igneous extrusive silicate glass."}, {"id": "gla_16", "name": "Schott Zerodur Glass-Ceramic", "formula": "Lithium Aluminosilicate", "category": "Glasses", "mw": 68.0, "eq_type": "poly", "params": {"c0": 530.0, "c1": 1.08, "c2": -0.00038, "c3": 0.0}, "T_min": 200.0, "T_max": 850.0, "Cp_298": 800.0, "unit": "J/(kg*K)", "source": "Schott Zerodur Precision Catalog", "notes": "Zero thermal expansion glass-ceramic for astronomical telescope mirrors."}, {"id": "gla_17", "name": "Macor Machinable Glass-Ceramic", "formula": "Fluorophlogopite-Borosilicate", "category": "Glasses", "mw": 72.0, "eq_type": "poly", "params": {"c0": 540.0, "c1": 1.02, "c2": -0.00035, "c3": 0.0}, "T_min": 200.0, "T_max": 1000.0, "Cp_298": 790.0, "unit": "J/(kg*K)", "source": "Corning Macor Machinable Ceramic Data", "notes": "Mica-containing glass-ceramic machinable with standard metalworking tools."}, {"id": "gla_18", "name": "Fused Quartz (GE 124)", "formula": "SiO2", "category": "Glasses", "mw": 60.084, "eq_type": "poly", "params": {"c0": 485.0, "c1": 1.14, "c2": -0.00044, "c3": 0.0}, "T_min": 200.0, "T_max": 1400.0, "Cp_298": 742.0, "unit": "J/(kg*K)", "source": "Momentive Quartz Technologies Handbook", "notes": "High-purity quartz tubing for semiconductor wafer processing furnaces."}, {"id": "gla_19", "name": "C-Glass (Chemical Resistant Glass)", "formula": "65SiO2-14CaO-8Na2O-6B2O3", "category": "Glasses", "mw": 66.0, "eq_type": "poly", "params": {"c0": 580.0, "c1": 0.94, "c2": -0.00032, "c3": 0.0}, "T_min": 200.0, "T_max": 850.0, "Cp_298": 830.0, "unit": "J/(kg*K)", "source": "Saint-Gobain Vetrotex Technical Bulletin", "notes": "Borosilicate fiber glass tailored for acidic corrosion barrier surfacing veils."}, {"id": "gla_20", "name": "Lead Glass X-Ray Shielding (RD 50)", "formula": "65PbO-25SiO2-10K2O", "category": "Glasses", "mw": 155.0, "eq_type": "poly", "params": {"c0": 290.0, "c1": 0.48, "c2": -0.00014, "c3": 0.0}, "T_min": 200.0, "T_max": 700.0, "Cp_298": 410.0, "unit": "J/(kg*K)", "source": "Schott RD 50 Radiation Shielding Glass", "notes": "Heavy lead glass with lead equivalent > 2 mm for medical radiology viewing."}, {"id": "gla_21", "name": "Tellurite Glass (75TeO2-20ZnO-5Na2O)", "formula": "Tellurite Matrix", "category": "Glasses", "mw": 148.0, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.52, "c2": -0.00015, "c3": 0.0}, "T_min": 200.0, "T_max": 600.0, "Cp_298": 460.0, "unit": "J/(kg*K)", "source": "El-Mallawany, Tellurite Glasses Handbook", "notes": "High non-linear optical refractive index glass for supercontinuum lasers."}, {"id": "gla_22", "name": "Germanate Optical Glass (GeO2-PbO)", "formula": "Germanate Matrix", "category": "Glasses", "mw": 112.0, "eq_type": "poly", "params": {"c0": 390.0, "c1": 0.62, "c2": -0.00019, "c3": 0.0}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 530.0, "unit": "J/(kg*K)", "source": "SciGlass Database / J. Non-Cryst. Solids", "notes": "IR transmitting window glass extending beyond silicate transparency edge."}, {"id": "gla_23", "name": "Barium Crown Glass (Schott BaK4)", "formula": "Barium Borosilicate", "category": "Glasses", "mw": 75.0, "eq_type": "poly", "params": {"c0": 510.0, "c1": 0.85, "c2": -0.00026, "c3": 0.0}, "T_min": 200.0, "T_max": 800.0, "Cp_298": 730.0, "unit": "J/(kg*K)", "source": "Schott Optical Glass Catalog (BaK4)", "notes": "High refractive index optical prism glass delivering circular exit pupils."}, {"id": "gla_24", "name": "Dense Flint Glass (Schott SF11)", "formula": "Lead Silicate Optical", "category": "Glasses", "mw": 135.0, "eq_type": "poly", "params": {"c0": 320.0, "c1": 0.54, "c2": -0.00016, "c3": 0.0}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 450.0, "unit": "J/(kg*K)", "source": "Schott SF11 Technical Data Sheet", "notes": "High chromatic dispersion (Abbe number Vd = 25.76) glass for achromatic doublets."}, {"id": "gla_25", "name": "Vitreous Carbon / Glassy Carbon", "formula": "C (amorphous)", "category": "Glasses", "mw": 12.011, "eq_type": "poly", "params": {"c0": 520.0, "c1": 1.25, "c2": -0.00048, "c3": 0.0}, "T_min": 200.0, "T_max": 1500.0, "Cp_298": 760.0, "unit": "J/(kg*K)", "source": "Alfa Aesar Glassy Carbon Technical Data", "notes": "Fullerenic non-graphitizing carbon with extreme thermal and chemical inertness."}, {"id": "ref_01", "name": "Magnesite Refractory (95% MgO)", "formula": "MgO Refractory", "category": "Refractories", "mw": 40.3, "eq_type": "poly", "params": {"c0": 880.0, "c1": 0.32, "c2": -8e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 2000.0, "Cp_298": 940.0, "unit": "J/(kg*K)", "source": "Harbison-Walker Refractory Handbook / ASTM C455", "notes": "Basic refractory brick lining for basic oxygen steelmaking furnaces."}, {"id": "ref_02", "name": "Dolomite Refractory Brick", "formula": "CaO-MgO", "category": "Refractories", "mw": 48.2, "eq_type": "poly", "params": {"c0": 850.0, "c1": 0.31, "c2": -7e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1900.0, "Cp_298": 910.0, "unit": "J/(kg*K)", "source": "RHI Magnesita Technical Data", "notes": "Co-calcined dolomite basic refractory for secondary refining ladles."}, {"id": "ref_03", "name": "Fireclay Refractory (Super-Duty)", "formula": "Al2O3-2SiO2 (calcined)", "category": "Refractories", "mw": 62.0, "eq_type": "poly", "params": {"c0": 820.0, "c1": 0.28, "c2": -6e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1750.0, "Cp_298": 880.0, "unit": "J/(kg*K)", "source": "ASTM C27 Fireclay Classification / MatWeb", "notes": "Aluminosilicate general purpose kiln lining brick (35-45% Al2O3)."}, {"id": "ref_04", "name": "High-Alumina Refractory (70% Al2O3)", "formula": "70Al2O3-30SiO2", "category": "Refractories", "mw": 85.0, "eq_type": "poly", "params": {"c0": 860.0, "c1": 0.31, "c2": -7e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1900.0, "Cp_298": 920.0, "unit": "J/(kg*K)", "source": "Plibrico Refractory Engineering Guide", "notes": "High hot-strength refractory for blast furnace stoves and cement rotary kilns."}, {"id": "ref_05", "name": "Silicon Carbide Refractory (Nitride Bonded)", "formula": "SiC-Si3N4", "category": "Refractories", "mw": 45.0, "eq_type": "poly", "params": {"c0": 740.0, "c1": 0.42, "c2": -0.00012, "c3": 0.0}, "T_min": 273.15, "T_max": 1800.0, "Cp_298": 840.0, "unit": "J/(kg*K)", "source": "Saint-Gobain NorPro Cryston Technical Data", "notes": "High thermal conductivity and abrasion-resistant kiln furniture and cyclones."}, {"id": "ref_06", "name": "Chromite Refractory Brick", "formula": "FeCr2O4-MgAl2O4", "category": "Refractories", "mw": 175.0, "eq_type": "poly", "params": {"c0": 680.0, "c1": 0.24, "c2": -5e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1850.0, "Cp_298": 730.0, "unit": "J/(kg*K)", "source": "Norton Refractory Systems Manual", "notes": "Neutral refractory with high slag resistance for non-ferrous smelting furnaces."}, {"id": "ref_07", "name": "Zirconia-Alumina-Silica (AZS Fused Cast)", "formula": "41ZrO2-46Al2O3-13SiO2", "category": "Refractories", "mw": 115.0, "eq_type": "poly", "params": {"c0": 720.0, "c1": 0.29, "c2": -6e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1950.0, "Cp_298": 780.0, "unit": "J/(kg*K)", "source": "SEPR Refractories / Saint-Gobain (ER-1681)", "notes": "Fused cast monolithic block lining for glass melting furnace sidewalls."}, {"id": "ref_08", "name": "Carbon Refractory Block", "formula": "C (baked anthracite)", "category": "Refractories", "mw": 12.011, "eq_type": "poly", "params": {"c0": 680.0, "c1": 0.75, "c2": -0.00022, "c3": 0.0}, "T_min": 273.15, "T_max": 2000.0, "Cp_298": 850.0, "unit": "J/(kg*K)", "source": "SGL Carbon Refractory Data", "notes": "Submerged arc furnace and blast furnace hearth hearth lining block."}, {"id": "ref_09", "name": "Nuclear Grade Synthetic Graphite", "formula": "C (graphitic)", "category": "Refractories", "mw": 12.011, "eq_type": "poly", "params": {"c0": 580.0, "c1": 1.15, "c2": -0.00042, "c3": 0.0}, "T_min": 273.15, "T_max": 2500.0, "Cp_298": 715.0, "unit": "J/(kg*K)", "source": "Touloukian TPRC Vol. 5 / IAEA Nuclear Graphite Data", "notes": "Neutron moderator and high-temperature structural material for HTGR reactors."}, {"id": "ref_10", "name": "Hafnium Carbide (UHTC)", "formula": "HfC", "category": "Refractories", "mw": 190.5, "eq_type": "shomate", "params": {"A": 44.12, "B": 10.45, "C": -3.12, "D": 0.45, "E": -0.65}, "T_min": 298.15, "T_max": 2800.0, "Cp_298": 37.4, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "Ultra-High Temperature Ceramic (UHTC) with extreme melting point (Tm = 4173 K)."}, {"id": "ref_11", "name": "Tantalum Carbide (UHTC)", "formula": "TaC", "category": "Refractories", "mw": 192.96, "eq_type": "shomate", "params": {"A": 43.85, "B": 10.85, "C": -3.25, "D": 0.48, "E": -0.62}, "T_min": 298.15, "T_max": 2800.0, "Cp_298": 36.8, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Ultra-refractory interstitial carbide (Tm = 4153 K) for hypersonic nose cones."}, {"id": "ref_12", "name": "Zirconium Diboride (ZrB2 UHTC)", "formula": "ZrB2", "category": "Refractories", "mw": 112.84, "eq_type": "shomate", "params": {"A": 52.45, "B": 24.15, "C": -8.45, "D": 1.25, "E": -1.15}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 48.2, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "High thermal conductivity UHTC ceramic for sharp hypersonic leading edges."}, {"id": "ref_13", "name": "Hafnium Diboride (HfB2 UHTC)", "formula": "HfB2", "category": "Refractories", "mw": 200.11, "eq_type": "shomate", "params": {"A": 53.12, "B": 22.85, "C": -7.85, "D": 1.15, "E": -1.08}, "T_min": 298.15, "T_max": 2500.0, "Cp_298": 49.5, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Extreme ablation resistance boride UHTC; Tm = 3523 K."}, {"id": "ref_14", "name": "Titanium Diboride (TiB2)", "formula": "TiB2", "category": "Refractories", "mw": 69.49, "eq_type": "shomate", "params": {"A": 49.85, "B": 26.45, "C": -9.85, "D": 1.45, "E": -1.25}, "T_min": 298.15, "T_max": 2300.0, "Cp_298": 44.3, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "Electrically conductive refractory ceramic for aluminum Hall-Heroult cathodes."}, {"id": "ref_15", "name": "Tantalum Hafnium Carbide (Ta4HfC5)", "formula": "Ta4HfC5", "category": "Refractories", "mw": 962.33, "eq_type": "poly", "params": {"c0": 180.0, "c1": 0.045, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 3000.0, "Cp_298": 192.0, "unit": "J/(mol*K)", "source": "Lavrentyev et al., Phys. Rev. B / UHTC Data", "notes": "Highest known melting point compound material system (Tm ~ 4263 K)."}, {"id": "ref_16", "name": "Magnesia-Carbon Brick (MgO-C)", "formula": "85MgO-15C", "category": "Refractories", "mw": 36.0, "eq_type": "poly", "params": {"c0": 850.0, "c1": 0.45, "c2": -0.0001, "c3": 0.0}, "T_min": 273.15, "T_max": 1900.0, "Cp_298": 940.0, "unit": "J/(kg*K)", "source": "Vesuvius Refractory Technology Bulletin", "notes": "Graphite-bonded magnesite for steel slagline and electric arc furnaces."}, {"id": "ref_17", "name": "Zirconia Refractory (YSZ Dense)", "formula": "ZrO2-8Y2O3", "category": "Refractories", "mw": 128.0, "eq_type": "poly", "params": {"c0": 480.0, "c1": 0.18, "c2": -4e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 2200.0, "Cp_298": 520.0, "unit": "J/(kg*K)", "source": "Zircoa Technical Ceramics Data", "notes": "Fully stabilized cubic zirconia for induction skull melting crucibles."}, {"id": "ref_18", "name": "Fused Silica Refractory (Isostatic)", "formula": "SiO2", "category": "Refractories", "mw": 60.084, "eq_type": "poly", "params": {"c0": 740.0, "c1": 0.35, "c2": -8e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1400.0, "Cp_298": 810.0, "unit": "J/(kg*K)", "source": "Vesuvius Technical Data Sheet", "notes": "Submerged entry nozzles (SEN) for continuous casting steel tundishes."}, {"id": "ref_19", "name": "Silicon Nitride Refractory (RBSN)", "formula": "Si3N4 (porous)", "category": "Refractories", "mw": 140.28, "eq_type": "poly", "params": {"c0": 680.0, "c1": 0.38, "c2": -9e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1650.0, "Cp_298": 760.0, "unit": "J/(kg*K)", "source": "Ceradyne 3M Advanced Ceramics", "notes": "Reaction-bonded silicon nitride riser tubes for non-ferrous aluminum die casting."}, {"id": "ref_20", "name": "Beryllia Refractory (Dense BeO)", "formula": "BeO", "category": "Refractories", "mw": 25.011, "eq_type": "poly", "params": {"c0": 980.0, "c1": 0.52, "c2": -0.00014, "c3": 0.0}, "T_min": 273.15, "T_max": 2200.0, "Cp_298": 1080.0, "unit": "J/(kg*K)", "source": "Materion Brush Beryllium Ceramic Manual", "notes": "Refractory microwave power windows and laser tube bores."}, {"id": "ref_21", "name": "Alumina-Graphite Shroud", "formula": "50Al2O3-30C-20SiO2", "category": "Refractories", "mw": 45.0, "eq_type": "poly", "params": {"c0": 780.0, "c1": 0.55, "c2": -0.00012, "c3": 0.0}, "T_min": 273.15, "T_max": 1800.0, "Cp_298": 900.0, "unit": "J/(kg*K)", "source": "Krosaki Harima Refractories Data", "notes": "Thermal shock resistant pouring shrouds between steel ladle and tundish."}, {"id": "ref_22", "name": "Spinel Refractory Brick (MgO-MgAl2O4)", "formula": "Spinel Brick", "category": "Refractories", "mw": 65.0, "eq_type": "poly", "params": {"c0": 850.0, "c1": 0.31, "c2": -7e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1900.0, "Cp_298": 915.0, "unit": "J/(kg*K)", "source": "Refratechnik Cement Kiln Engineering", "notes": "Chrome-free lining brick for the burning zone of cement rotary kilns."}, {"id": "ref_23", "name": "Cordierite-Mullite Kiln Shelf", "formula": "Al2O3-SiO2-MgO", "category": "Refractories", "mw": 80.0, "eq_type": "poly", "params": {"c0": 820.0, "c1": 0.3, "c2": -6e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1550.0, "Cp_298": 880.0, "unit": "J/(kg*K)", "source": "Saint-Gobain Refractory Ceramics", "notes": "Low thermal expansion sagging-resistant firing batts for porcelain production."}, {"id": "ref_24", "name": "Boron Nitride Hot-Pressed (HBN)", "formula": "BN solid", "category": "Refractories", "mw": 24.82, "eq_type": "poly", "params": {"c0": 760.0, "c1": 0.62, "c2": -0.00015, "c3": 0.0}, "T_min": 273.15, "T_max": 2000.0, "Cp_298": 900.0, "unit": "J/(kg*K)", "source": "Saint-Gobain Combat BN Data", "notes": "Non-wetting crucible for molten metal evaporation and horizontal casting break rings."}, {"id": "ref_25", "name": "Sillimanite Refractory Brick", "formula": "Al2SiO5", "category": "Refractories", "mw": 162.05, "eq_type": "poly", "params": {"c0": 810.0, "c1": 0.29, "c2": -6e-05, "c3": 0.0}, "T_min": 273.15, "T_max": 1750.0, "Cp_298": 870.0, "unit": "J/(kg*K)", "source": "Morgan Advanced Materials Refractories", "notes": "Natural aluminosilicate refractory for glass feeder expendables and forehearths."}, {"id": "comp_01", "name": "Carbon Fiber/Epoxy Composite (CFRP UD 60% vf)", "formula": "C-Fiber/Epoxy (60% vf)", "category": "Composite materials", "mw": 35.0, "eq_type": "poly", "params": {"c0": 780.0, "c1": 1.45, "c2": -0.00035, "c3": 0.0}, "T_min": 200.0, "T_max": 450.0, "Cp_298": 1100.0, "unit": "J/(kg*K)", "source": "Hexcel HexPly M21/T800S Data / MIL-HDBK-17", "notes": "High-strength unidirectional carbon composite for aircraft fuselage skins."}, {"id": "comp_02", "name": "Glass Fiber/Epoxy Composite (GFRP 55% vf)", "formula": "E-Glass/Epoxy (55% vf)", "category": "Composite materials", "mw": 52.0, "eq_type": "poly", "params": {"c0": 820.0, "c1": 1.25, "c2": -0.00028, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1120.0, "unit": "J/(kg*K)", "source": "Owens Corning WindStrand Data / MIL-HDBK-17", "notes": "High fatigue resistance composite for wind turbine rotor blades."}, {"id": "comp_03", "name": "Aramid/Kevlar Epoxy Composite (AFRP 50% vf)", "formula": "Kevlar-49/Epoxy (50% vf)", "category": "Composite materials", "mw": 42.0, "eq_type": "poly", "params": {"c0": 920.0, "c1": 1.55, "c2": -0.00038, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1300.0, "unit": "J/(kg*K)", "source": "DuPont Kevlar Composites Guide", "notes": "High impact absorption composite for ballistic spall liners and radomes."}, {"id": "comp_04", "name": "Aluminum-Silicon Carbide MMC (Al-20% SiC)", "formula": "Al-20% SiCp", "category": "Composite materials", "mw": 28.5, "eq_type": "poly", "params": {"c0": 780.0, "c1": 0.38, "c2": -9e-05, "c3": 0.0}, "T_min": 250.0, "T_max": 750.0, "Cp_298": 860.0, "unit": "J/(kg*K)", "source": "Materion Supaform MMC / ASM Handbook Vol. 21", "notes": "Particle-reinforced metal matrix composite for lightweight automotive brake rotors."}, {"id": "comp_05", "name": "Copper-Tungsten Contact MMC (Cu-70% W)", "formula": "W70Cu30", "category": "Composite materials", "mw": 147.7, "eq_type": "poly", "params": {"c0": 220.0, "c1": 0.085, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 1100.0, "Cp_298": 245.0, "unit": "J/(kg*K)", "source": "Plansee Tungsten-Copper Composites Manual", "notes": "Arc-erosion resistant heavy MMC for high-voltage SF6 circuit breaker arcing tips."}, {"id": "comp_06", "name": "Carbon-Carbon Composite (C/C 2D Fabric)", "formula": "C-Fiber/C-Matrix", "category": "Composite materials", "mw": 12.011, "eq_type": "poly", "params": {"c0": 620.0, "c1": 1.12, "c2": -0.00038, "c3": 0.0}, "T_min": 200.0, "T_max": 2200.0, "Cp_298": 820.0, "unit": "J/(kg*K)", "source": "Safran Landing Systems / Touloukian TPRC Vol. 5", "notes": "Non-melting frictional material for commercial jet transport brake discs."}, {"id": "comp_07", "name": "SiC-SiC Ceramic Matrix Composite (CMC)", "formula": "SiC-Fiber/SiC-Matrix", "category": "Composite materials", "mw": 40.1, "eq_type": "poly", "params": {"c0": 620.0, "c1": 0.48, "c2": -0.00012, "c3": 0.0}, "T_min": 250.0, "T_max": 1600.0, "Cp_298": 720.0, "unit": "J/(kg*K)", "source": "GE Aviation CFM LEAP CMC Shroud Data / NASA TM", "notes": "High-temperature continuous fiber ceramic composite for jet engine hot-stage shrouds."}, {"id": "comp_08", "name": "Tungsten Carbide-Cobalt Cermet (WC-10Co)", "formula": "WC-10wt%Co", "category": "Composite materials", "mw": 182.1, "eq_type": "poly", "params": {"c0": 210.0, "c1": 0.075, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 1200.0, "Cp_298": 230.0, "unit": "J/(kg*K)", "source": "Sandvik Coromant Hard Materials Catalog", "notes": "Sintered cemented carbide for CNC indexable metal cutting inserts."}, {"id": "comp_09", "name": "Titanium Carbide-Nickel Cermet (TiC-Ni)", "formula": "TiC-15wt%Ni", "category": "Composite materials", "mw": 59.7, "eq_type": "poly", "params": {"c0": 460.0, "c1": 0.18, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 1200.0, "Cp_298": 505.0, "unit": "J/(kg*K)", "source": "Kennametal High-Speed Finishing Cermet Data", "notes": "High-speed steel finishing cermet providing mirror surface finish."}, {"id": "comp_10", "name": "Portland Cement Concrete (Standard Mix)", "formula": "Silicate Hydrate / Aggregate", "category": "Composite materials", "mw": 75.0, "eq_type": "poly", "params": {"c0": 720.0, "c1": 0.45, "c2": -0.00012, "c3": 0.0}, "T_min": 250.0, "T_max": 800.0, "Cp_298": 880.0, "unit": "J/(kg*K)", "source": "NIST Building Materials Database / Mindess Concrete", "notes": "Civil infrastructure structural mass composite."}, {"id": "comp_11", "name": "Structural Wood (Douglas Fir 12% MC)", "formula": "Cellulose-Lignin Matrix", "category": "Composite materials", "mw": 50.0, "eq_type": "poly", "params": {"c0": 1100.0, "c1": 3.8, "c2": -0.001, "c3": 0.0}, "T_min": 220.0, "T_max": 380.0, "Cp_298": 1700.0, "unit": "J/(kg*K)", "source": "USDA Forest Products Laboratory Wood Handbook", "notes": "Natural cellular polymer-matrix fiber composite."}, {"id": "comp_12", "name": "Dental Hybrid Composite Resin", "formula": "75% Bis-GMA / 25% Ba-Glass", "category": "Composite materials", "mw": 85.0, "eq_type": "poly", "params": {"c0": 850.0, "c1": 1.2, "c2": -0.0003, "c3": 0.0}, "T_min": 250.0, "T_max": 360.0, "Cp_298": 1100.0, "unit": "J/(kg*K)", "source": "3M ESPE Filtek Technical Product Profile", "notes": "Photocurable microhybrid aesthetic dental tooth filling material."}, {"id": "comp_13", "name": "FR-4 Glass-Epoxy Circuit Board Laminate", "formula": "E-Glass/FR-4 Epoxy", "category": "Composite materials", "mw": 58.0, "eq_type": "poly", "params": {"c0": 800.0, "c1": 1.3, "c2": -0.00032, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1100.0, "unit": "J/(kg*K)", "source": "Isola Group FR406 Data Sheet / IPC-4101", "notes": "Flame-retardant printed circuit board dielectric core laminate."}, {"id": "comp_14", "name": "Basalt Fiber Reinforced Polymer (BFRP)", "formula": "Basalt-Fiber/Vinyl Ester", "category": "Composite materials", "mw": 54.0, "eq_type": "poly", "params": {"c0": 810.0, "c1": 1.28, "c2": -0.0003, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1130.0, "unit": "J/(kg*K)", "source": "Kamenny Vek Basalt Fibers / MatWeb", "notes": "Corrosion-proof composite rebar for marine concrete infrastructure."}, {"id": "comp_15", "name": "Graphene-Epoxy Nanocomposite (1 wt%)", "formula": "Epoxy + 1% Graphene", "category": "Composite materials", "mw": 120.0, "eq_type": "poly", "params": {"c0": 860.0, "c1": 2.4, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1260.0, "unit": "J/(kg*K)", "source": "Rafiee et al., Small / Nanotechnology Data", "notes": "Polymer nanocomposite with enhanced interlaminar shear toughness."}, {"id": "comp_16", "name": "Alumina-Zirconia Nanocomposite (ATZ 80/20)", "formula": "80Al2O3-20ZrO2", "category": "Composite materials", "mw": 106.0, "eq_type": "poly", "params": {"c0": 680.0, "c1": 0.34, "c2": -8e-05, "c3": 0.0}, "T_min": 250.0, "T_max": 1600.0, "Cp_298": 750.0, "unit": "J/(kg*K)", "source": "CeramTec BIOLOX delta Data / Biomaterials", "notes": "Transformation-toughened ceramic composite for ceramic femoral heads."}, {"id": "comp_17", "name": "Zirconia-Toughened Alumina (ZTA 85/15)", "formula": "85Al2O3-15ZrO2", "category": "Composite materials", "mw": 105.0, "eq_type": "poly", "params": {"c0": 690.0, "c1": 0.35, "c2": -8e-05, "c3": 0.0}, "T_min": 250.0, "T_max": 1600.0, "Cp_298": 760.0, "unit": "J/(kg*K)", "source": "Dynamic-Ceramic ZTA Handbook", "notes": "Wear-resistant ceramic composite for mining slurry pump valve seals."}, {"id": "comp_18", "name": "B4C-Al Cermet (Boral 40% B4C)", "formula": "B4C-Al Matrix", "category": "Composite materials", "mw": 38.0, "eq_type": "poly", "params": {"c0": 820.0, "c1": 0.45, "c2": -0.00011, "c3": 0.0}, "T_min": 250.0, "T_max": 750.0, "Cp_298": 920.0, "unit": "J/(kg*K)", "source": "Ceradyne Boral Plate Manual", "notes": "Neutron poison absorption cermet for spent nuclear fuel dry storage casks."}, {"id": "comp_19", "name": "Carbon Fiber/PEEK Composite (CF/PEEK 60% vf)", "formula": "AS4/PEEK APC-2", "category": "Composite materials", "mw": 45.0, "eq_type": "poly", "params": {"c0": 880.0, "c1": 1.65, "c2": -0.0004, "c3": 0.0}, "T_min": 200.0, "T_max": 550.0, "Cp_298": 1250.0, "unit": "J/(kg*K)", "source": "Solvay APC-2 Data / SAMPE Technical Papers", "notes": "Thermoplastic matrix aerospace composite with unlimited shelf life and recyclability."}, {"id": "comp_19b", "name": "Carbon Fiber/BMI Composite (CF/Bismaleimide)", "formula": "C-Fiber/BMI Matrix", "category": "Composite materials", "mw": 38.0, "eq_type": "poly", "params": {"c0": 800.0, "c1": 1.5, "c2": -0.00036, "c3": 0.0}, "T_min": 200.0, "T_max": 520.0, "Cp_298": 1150.0, "unit": "J/(kg*K)", "source": "Cytec 5250-4 BMI Manual / MIL-HDBK-17", "notes": "High-temperature composite for supersonic fighter leading edges (service > 200 C)."}, {"id": "comp_20", "name": "Syntactic Foam Composite (Glass Microspheres/Epoxy)", "formula": "Hollow Glass/Epoxy", "category": "Composite materials", "mw": 42.0, "eq_type": "poly", "params": {"c0": 950.0, "c1": 2.1, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 380.0, "Cp_298": 1420.0, "unit": "J/(kg*K)", "source": "Trelleborg Offshore Syntactic Foam Guide", "notes": "Deep-sea buoyant lightweight composite for subsea ROVs and submarines."}, {"id": "comp_21", "name": "SiC Whisker Reinforced Alumina (Al2O3-SiCw)", "formula": "Al2O3-25wt%SiCw", "category": "Composite materials", "mw": 86.5, "eq_type": "poly", "params": {"c0": 710.0, "c1": 0.36, "c2": -8e-05, "c3": 0.0}, "T_min": 250.0, "T_max": 1600.0, "Cp_298": 780.0, "unit": "J/(kg*K)", "source": "Greenleaf WG-300 Whisker Ceramic Data", "notes": "Extreme shock resistant cutting tool ceramic for nickel-base superalloy milling."}, {"id": "comp_22", "name": "Metal-Diamond Thermal Substrate (Cu-50% Diamond)", "formula": "Cu-Diamond MMC", "category": "Composite materials", "mw": 37.8, "eq_type": "poly", "params": {"c0": 380.0, "c1": 0.42, "c2": -0.0001, "c3": 0.0}, "T_min": 200.0, "T_max": 800.0, "Cp_298": 480.0, "unit": "J/(kg*K)", "source": "Plansee Cu-Diamond Heat Sink Data", "notes": "High thermal conductivity (600 W/m-K) heat sink composite for GaN power RF chips."}, {"id": "comp_23", "name": "Al-Diamond Composite (Al-50% Diamond)", "formula": "Al-Diamond MMC", "category": "Composite materials", "mw": 19.5, "eq_type": "poly", "params": {"c0": 640.0, "c1": 0.65, "c2": -0.00015, "c3": 0.0}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 790.0, "unit": "J/(kg*K)", "source": "Denka Thermal Solution Plate Manual", "notes": "Ultra-lightweight high thermal conductivity baseplate for aerospace power modules."}, {"id": "comp_24", "name": "Glass-Filled Nylon 6,6 (PA66-GF30)", "formula": "PA66-30% Glass", "category": "Composite materials", "mw": 175.0, "eq_type": "poly", "params": {"c0": 950.0, "c1": 2.3, "c2": -0.0005, "c3": 0.0}, "T_min": 200.0, "T_max": 480.0, "Cp_298": 1380.0, "unit": "J/(kg*K)", "source": "BASF Ultramid A3EG6 Data Sheet", "notes": "Dimensionally stable injection moldable automotive intake manifold compound."}, {"id": "adv_01", "name": "YBCO High-Tc Superconductor", "formula": "YBa2Cu3O7", "category": "Other technologically relevant materials", "mw": 666.19, "eq_type": "poly", "params": {"c0": 240.0, "c1": 0.18, "c2": -4e-05, "c3": 0.0}, "T_min": 50.0, "T_max": 600.0, "Cp_298": 275.0, "unit": "J/(mol*K)", "source": "Junod et al., Physica C / Materials Project", "notes": "First high-Tc superconductor operating above liquid nitrogen (Tc = 93 K)."}, {"id": "adv_02", "name": "BSCCO High-Tc Superconductor", "formula": "Bi2Sr2Ca2Cu3O10", "category": "Other technologically relevant materials", "mw": 1023.9, "eq_type": "poly", "params": {"c0": 360.0, "c1": 0.28, "c2": -6e-05, "c3": 0.0}, "T_min": 50.0, "T_max": 600.0, "Cp_298": 410.0, "unit": "J/(mol*K)", "source": "Physica C / Superconductor Science Data", "notes": "First-generation high-temperature superconducting wire compound (Tc = 110 K)."}, {"id": "adv_03", "name": "Magnesium Diboride Superconductor", "formula": "MgB2", "category": "Other technologically relevant materials", "mw": 45.93, "eq_type": "shomate", "params": {"A": 48.12, "B": 22.45, "C": -7.85, "D": 1.15, "E": -1.05}, "T_min": 250.0, "T_max": 800.0, "Cp_298": 42.1, "unit": "J/(mol*K)", "source": "Nagamatsu et al., Nature / NIST", "notes": "Conventional phonon-mediated superconductor with record Tc = 39 K; Shomate valid 250-800 K."}, {"id": "adv_04", "name": "Niobium-Titanium Superconductor (Nb-47Ti)", "formula": "Nb53Ti47", "category": "Other technologically relevant materials", "mw": 71.72, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.18, "c2": 0.0, "c3": 0.0}, "T_min": 10.0, "T_max": 500.0, "Cp_298": 385.0, "unit": "J/(kg*K)", "source": "Wilson, Superconducting Magnets / CERN Data", "notes": "Ductile type-II superconductor wire for all medical MRI magnets and LHC."}, {"id": "adv_05", "name": "Niobium-Tin Superconductor (Nb3Sn)", "formula": "Nb3Sn", "category": "Other technologically relevant materials", "mw": 397.43, "eq_type": "poly", "params": {"c0": 85.0, "c1": 0.035, "c2": 0.0, "c3": 0.0}, "T_min": 20.0, "T_max": 600.0, "Cp_298": 95.0, "unit": "J/(mol*K)", "source": "ITER Superconducting Magnet Specs / IEEE Trans. Appl. Supercond.", "notes": "A15 intermetallic compound superconductor for high-field ITER fusion magnets (Tc = 18 K)."}, {"id": "adv_06", "name": "Lithium Cobalt Oxide (LCO Battery Cathode)", "formula": "LiCoO2", "category": "Other technologically relevant materials", "mw": 97.87, "eq_type": "shomate", "params": {"A": 82.45, "B": 18.45, "C": -5.85, "D": 0.85, "E": -1.45}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 75.2, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Takahashi et al., J. Chem. Thermodyn.", "notes": "Layered rocksalt cathode in high-energy smartphone lithium-ion batteries."}, {"id": "adv_07", "name": "Lithium Iron Phosphate (LFP Battery Cathode)", "formula": "LiFePO4", "category": "Other technologically relevant materials", "mw": 157.76, "eq_type": "shomate", "params": {"A": 128.45, "B": 28.15, "C": -8.95, "D": 1.25, "E": -2.15}, "T_min": 200.0, "T_max": 700.0, "Cp_298": 118.5, "unit": "J/(mol*K)", "source": "J. Chem. Thermodyn. / Wang et al., Solid State Ionics", "notes": "Olivine cathode renowned for extreme thermal stability and long cycle life."}, {"id": "adv_08", "name": "Lithium Nickel Manganese Cobalt Oxide (NMC-811)", "formula": "LiNi0.8Mn0.1Co0.1O2", "category": "Other technologically relevant materials", "mw": 97.28, "eq_type": "poly", "params": {"c0": 820.0, "c1": 0.85, "c2": -0.0002, "c3": 0.0}, "T_min": 200.0, "T_max": 600.0, "Cp_298": 980.0, "unit": "J/(kg*K)", "source": "Dahn et al., J. Electrochem. Soc. / Argonne Lab Data", "notes": "State-of-the-art EV battery cathode for high energy density (250 Wh/kg pack)."}, {"id": "adv_09", "name": "Lithium Titanate (LTO Battery Anode)", "formula": "Li4Ti5O12", "category": "Other technologically relevant materials", "mw": 459.08, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.16, "c2": -3e-05, "c3": 0.0}, "T_min": 200.0, "T_max": 800.0, "Cp_298": 385.0, "unit": "J/(mol*K)", "source": "Tarascon et al., Solid State Ionics / MatWeb", "notes": "Zero-strain insertion anode enabling 10-minute ultra-fast EV charging."}, {"id": "adv_10", "name": "Lithium Manganese Oxide Spinel (LMO)", "formula": "LiMn2O4", "category": "Other technologically relevant materials", "mw": 180.81, "eq_type": "shomate", "params": {"A": 142.12, "B": 32.45, "C": -10.85, "D": 1.55, "E": -2.45}, "T_min": 200.0, "T_max": 750.0, "Cp_298": 134.0, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / JANAF Tables", "notes": "3D framework spinel cathode for power tool battery packs."}, {"id": "adv_11", "name": "Cobalt Skutterudite Thermoelectric", "formula": "CoSb3", "category": "Other technologically relevant materials", "mw": 424.19, "eq_type": "poly", "params": {"c0": 92.0, "c1": 0.024, "c2": 0.0, "c3": 0.0}, "T_min": 200.0, "T_max": 850.0, "Cp_298": 99.0, "unit": "J/(mol*K)", "source": "Caillat et al., J. Appl. Phys. / NASA JPL Data", "notes": "Cage-structured skutterudite for automotive exhaust heat energy harvesting."}, {"id": "adv_12", "name": "Germanium Telluride (p-Type Thermoelectric)", "formula": "GeTe", "category": "Other technologically relevant materials", "mw": 200.22, "eq_type": "shomate", "params": {"A": 48.12, "B": 6.85, "C": -1.85, "D": 0.28, "E": -0.15}, "T_min": 250.0, "T_max": 950.0, "Cp_298": 50.4, "unit": "J/(mol*K)", "source": "NIST Chemistry WebBook / Barin (1995)", "notes": "High-performance mid-temperature thermoelectric (ZT > 2.0 upon alloying)."}, {"id": "adv_13", "name": "Tin Selenide (Single Crystal)", "formula": "SnSe", "category": "Other technologically relevant materials", "mw": 197.66, "eq_type": "poly", "params": {"c0": 46.0, "c1": 0.015, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 900.0, "Cp_298": 50.1, "unit": "J/(mol*K)", "source": "Zhao et al., Nature / Science Thermoelectrics Data", "notes": "Record high ZT = 2.6 thermoelectric compound with ultra-low lattice thermal conductivity."}, {"id": "adv_14", "name": "Half-Heusler Thermoelectric (TiNiSn)", "formula": "TiNiSn", "category": "Other technologically relevant materials", "mw": 225.28, "eq_type": "poly", "params": {"c0": 68.0, "c1": 0.018, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 1000.0, "Cp_298": 73.5, "unit": "J/(mol*K)", "source": "Tritt, Recent Trends in Thermoelectric Materials Research", "notes": "Thermally robust and mechanically strong half-Heusler alloy for industrial waste heat."}, {"id": "adv_15", "name": "Uranium Dioxide (Nuclear Fuel)", "formula": "UO2", "category": "Other technologically relevant materials", "mw": 270.03, "eq_type": "shomate", "params": {"A": 78.45, "B": 14.85, "C": -4.25, "D": 0.65, "E": -1.25}, "T_min": 298.15, "T_max": 3000.0, "Cp_298": 63.6, "unit": "J/(mol*K)", "source": "Fink (2000), J. Nucl. Mater. / IAEA Thermophysical Database", "notes": "Fluorite ceramic nuclear fuel for all pressurized light water reactors (PWR/BWR)."}, {"id": "adv_16", "name": "Thorium Dioxide (Nuclear Breeding Fuel)", "formula": "ThO2", "category": "Other technologically relevant materials", "mw": 264.04, "eq_type": "shomate", "params": {"A": 75.12, "B": 12.45, "C": -3.45, "D": 0.52, "E": -1.15}, "T_min": 298.15, "T_max": 3000.0, "Cp_298": 61.8, "unit": "J/(mol*K)", "source": "IAEA Nuclear Database / JANAF Tables", "notes": "High thermal conductivity breeding fuel with highest oxide melting point (Tm = 3663 K)."}, {"id": "adv_17", "name": "Plutonium Dioxide", "formula": "PuO2", "category": "Other technologically relevant materials", "mw": 276.06, "eq_type": "shomate", "params": {"A": 80.12, "B": 15.45, "C": -4.65, "D": 0.72, "E": -1.35}, "T_min": 298.15, "T_max": 2800.0, "Cp_298": 66.2, "unit": "J/(mol*K)", "source": "IAEA Thermophysical Properties / NIST", "notes": "Ceramic component in mixed-oxide (MOX) nuclear reactor fuels."}, {"id": "adv_18", "name": "Zircaloy-4 (Nuclear Cladding Alloy)", "formula": "Zr-1.5Sn-0.2Fe-0.1Cr", "category": "Other technologically relevant materials", "mw": 91.0, "eq_type": "poly", "params": {"c0": 270.0, "c1": 0.12, "c2": 0.0, "c3": 0.0}, "T_min": 298.15, "T_max": 1200.0, "Cp_298": 305.0, "unit": "J/(kg*K)", "source": "MATPRO Nuclear Materials Handbook / IAEA-TECDOC", "notes": "Corrosion resistant zirconium alloy for fuel rod cladding tubes."}, {"id": "adv_19", "name": "Liquid Sodium (Fast Reactor Coolant)", "formula": "Na (liquid)", "category": "Other technologically relevant materials", "mw": 22.99, "eq_type": "poly", "params": {"c0": 1380.0, "c1": -0.38, "c2": 0.00015, "c3": 0.0}, "T_min": 371.0, "T_max": 1150.0, "Cp_298": 1280.0, "unit": "J/(kg*K)", "source": "Foust, Sodium-NaK Engineering Handbook / IAEA", "notes": "Liquid metal coolant with superior heat transfer for sodium fast nuclear reactors."}, {"id": "adv_20", "name": "Liquid Lead-Bismuth Eutectic (LBE)", "formula": "Pb44.5Bi55.5", "category": "Other technologically relevant materials", "mw": 208.2, "eq_type": "poly", "params": {"c0": 145.0, "c1": 0.015, "c2": 0.0, "c3": 0.0}, "T_min": 398.0, "T_max": 1100.0, "Cp_298": 149.0, "unit": "J/(kg*K)", "source": "OECD-NEA Lead-Bismuth Eutectic Handbook", "notes": "Heavy liquid metal spallation target and Gen-IV nuclear coolant."}, {"id": "adv_21", "name": "Hydroxyapatite (Bone Mineral Biomaterial)", "formula": "Ca10(PO4)6(OH)2", "category": "Other technologically relevant materials", "mw": 1004.6, "eq_type": "poly", "params": {"c0": 720.0, "c1": 0.38, "c2": -8e-05, "c3": 0.0}, "T_min": 200.0, "T_max": 1400.0, "Cp_298": 830.0, "unit": "J/(mol*K)", "source": "Robie & Hemingway, USGS Bulletin / Biomaterials Data", "notes": "Synthetic bone substitute bioceramic for plasma-sprayed orthopedic implants."}, {"id": "adv_22", "name": "beta-Tricalcium Phosphate (Bioactive)", "formula": "Ca3(PO4)2", "category": "Other technologically relevant materials", "mw": 310.18, "eq_type": "poly", "params": {"c0": 210.0, "c1": 0.085, "c2": -2e-05, "c3": 0.0}, "T_min": 200.0, "T_max": 1400.0, "Cp_298": 235.0, "unit": "J/(mol*K)", "source": "USGS Bulletin 2131 / Biomaterials Manual", "notes": "Resorbable osteoconductive bone graft bioceramic."}, {"id": "adv_23", "name": "Titanium Grade 2 (Pure Medical Implant)", "formula": "Ti (unalloyed)", "category": "Other technologically relevant materials", "mw": 47.867, "eq_type": "poly", "params": {"c0": 520.0, "c1": 0.22, "c2": -3e-05, "c3": 0.0}, "T_min": 250.0, "T_max": 1150.0, "Cp_298": 523.0, "unit": "J/(kg*K)", "source": "ASTM F67 / ASM Handbook Vol. 2", "notes": "Biocompatible dental implant and bone fixation screw titanium."}, {"id": "adv_24", "name": "Co-Cr-Mo Alloy (ASTM F75 Cast Implant)", "formula": "Co-28Cr-6Mo", "category": "Other technologically relevant materials", "mw": 60.5, "eq_type": "poly", "params": {"c0": 420.0, "c1": 0.16, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 1300.0, "Cp_298": 450.0, "unit": "J/(kg*K)", "source": "ASTM F75 / ASM Handbook: Medical Devices", "notes": "High wear and corrosion resistant alloy for artificial hip and knee joints."}, {"id": "adv_25", "name": "Cu-Al-Ni High-Temp Shape Memory Alloy", "formula": "Cu-14Al-4Ni", "category": "Other technologically relevant materials", "mw": 62.1, "eq_type": "poly", "params": {"c0": 410.0, "c1": 0.14, "c2": 0.0, "c3": 0.0}, "T_min": 250.0, "T_max": 800.0, "Cp_298": 445.0, "unit": "J/(kg*K)", "source": "Otsuka & Wayman, Shape Memory Materials", "notes": "High-temperature shape memory alloy operating up to 200 C."}, {"id": "adv_26", "name": "Solid State Electrolyte LLZO", "formula": "Li7La3Zr2O12", "category": "Other technologically relevant materials", "mw": 839.8, "eq_type": "poly", "params": {"c0": 580.0, "c1": 0.24, "c2": -5e-05, "c3": 0.0}, "T_min": 200.0, "T_max": 900.0, "Cp_298": 620.0, "unit": "J/(mol*K)", "source": "Garnet Solid State Electrolyte Data / J. Power Sources", "notes": "Fast garnet-structured lithium ion conductor for non-flammable solid batteries."}, {"id": "adv_27", "name": "Sodium Vanadium Phosphate (NVP Na-Ion Cathode)", "formula": "Na3V2(PO4)3", "category": "Other technologically relevant materials", "mw": 451.76, "eq_type": "poly", "params": {"c0": 340.0, "c1": 0.16, "c2": -3e-05, "c3": 0.0}, "T_min": 200.0, "T_max": 700.0, "Cp_298": 385.0, "unit": "J/(mol*K)", "source": "Goodenough et al., NASICON Battery Research", "notes": "NASICON-structured cathode material for low-cost grid sodium-ion batteries."}, {"id": "adv_28", "name": "Graphene (Single Layer Monolayer)", "formula": "C (2D lattice)", "category": "Other technologically relevant materials", "mw": 12.011, "eq_type": "poly", "params": {"c0": 580.0, "c1": 1.25, "c2": -0.00045, "c3": 0.0}, "T_min": 100.0, "T_max": 1500.0, "Cp_298": 710.0, "unit": "J/(kg*K)", "source": "Pop et al., Nano Research / Balandin (2011)", "notes": "2D carbon crystal with ballistic thermal transport and extreme in-plane stiffness."}, {"id": "adv_29", "name": "Multi-Walled Carbon Nanotubes (MWCNT)", "formula": "C (tubular)", "category": "Other technologically relevant materials", "mw": 12.011, "eq_type": "poly", "params": {"c0": 550.0, "c1": 1.3, "c2": -0.00048, "c3": 0.0}, "T_min": 100.0, "T_max": 1500.0, "Cp_298": 680.0, "unit": "J/(kg*K)", "source": "Hone et al., Phys. Rev. B / Touloukian TPRC", "notes": "High-aspect ratio cylindrical carbon allotrope for conductive composites."}, {"id": "adv_30", "name": "Poly(3,4-ethylenedioxythiophene) (PEDOT:PSS)", "formula": "Conducting Polymer", "category": "Other technologically relevant materials", "mw": 150.0, "eq_type": "poly", "params": {"c0": 1100.0, "c1": 2.9, "c2": -0.0006, "c3": 0.0}, "T_min": 200.0, "T_max": 420.0, "Cp_298": 1520.0, "unit": "J/(kg*K)", "source": "Groenendaal et al., Adv. Mater. / PoLyInfo", "notes": "Inherently conductive conjugated polymer for organic flexible electronics and OLEDs."}];
+
+    // 15 High-Contrast Scientific Curve Colors
+    const PALETTE = [
+      "#2563eb", "#dc2626", "#16a34a", "#ea580c", "#7c3aed",
+      "#0891b2", "#db2777", "#059669", "#d97706", "#475569",
+      "#4f46e5", "#9333ea", "#0284c7", "#b91c1c", "#15803d"
+    ];
+
+    // State
+    let activeIds = ["met_01", "met_02", "cer_01", "poly_01"]; // Initial selection: Al, Cu, Al2O3, HDPE
+    let currentCategory = "all";
+    let searchQuery = "";
+    let tempMin = 200;
+    let tempMax = 1500;
+    let tempUnit = "K";
+    let cpUnit = "J/(kg*K)";
+    let refTempK = 298.15;
+
+    // Cp Mathematical Evaluation
+    function calculateCp(mat, T_k) {
+      const type = mat.eq_type;
+      const p = mat.params;
+      let val = 0.0;
+
+      if (type === "shomate") {
+        const t = T_k / 1000.0;
+        val = p.A + p.B * t + p.C * Math.pow(t, 2) + p.D * Math.pow(t, 3) + p.E / Math.pow(t, 2);
+        return convertUnits(val, "J/(mol*K)", cpUnit, mat.mw);
+      } else {
+        val = p.c0 + (p.c1 || 0) * T_k + (p.c2 || 0) * Math.pow(T_k, 2) + (p.c3 || 0) * Math.pow(T_k, 3);
+        return convertUnits(val, mat.unit, cpUnit, mat.mw);
+      }
+    }
+
+    function convertUnits(val, fromUnit, toUnit, mw) {
+      if (fromUnit === toUnit) return val;
+
+      // Base: J/(kg*K)
+      let valJkg = val;
+      if (fromUnit === "J/(mol*K)") {
+        valJkg = (val / mw) * 1000.0;
+      }
+
+      // Convert from base
+      if (toUnit === "J/(kg*K)") return valJkg;
+      if (toUnit === "J/(mol*K)") return (valJkg * mw) / 1000.0;
+      if (toUnit === "kJ/(kg*K)") return valJkg / 1000.0;
+      if (toUnit === "cal/(g*C)") return valJkg / 4184.0;
+      if (toUnit === "BTU/(lb*F)") return valJkg / 4186.8;
+      return valJkg;
+    }
+
+    function kToDisp(tk) {
+      return tempUnit === "C" ? tk - 273.15 : tk;
+    }
+
+    function dispToK(td) {
+      return tempUnit === "C" ? td + 273.15 : td;
+    }
+
+    // High-Precision SVG Plotting Engine
+    const svgEl = document.getElementById("plot-svg");
+    const chartBox = document.getElementById("chart-box");
+    const tooltip = document.getElementById("tooltip");
+    let plottedDataCache = [];
+
+    function renderPlot() {
+      const width = chartBox.clientWidth || 800;
+      const height = chartBox.clientHeight || 440;
+      
+      const pad = { left: 75, right: 30, top: 30, bottom: 50 };
+      const plotW = width - pad.left - pad.right;
+      const plotH = height - pad.top - pad.bottom;
+
+      svgEl.setAttribute("width", width);
+      svgEl.setAttribute("height", height);
+      svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svgEl.innerHTML = "";
+
+      const tMinK = dispToK(tempMin);
+      const tMaxK = dispToK(tempMax);
+
+      if (tMinK >= tMaxK || activeIds.length === 0) {
+        const msg = activeIds.length === 0 ? "Please select one or more materials to display curves." : "Invalid temperature range: Min must be less than Max.";
+        svgEl.innerHTML = `<text x="${width/2}" y="${height/2}" text-anchor="middle" fill="#6b7280" font-size="14">${msg}</text>`;
+        return;
+      }
+
+      // Sample curves
+      const numPts = 120;
+      const stepK = (tMaxK - tMinK) / (numPts - 1);
+      plottedDataCache = [];
+      let yMin = Infinity;
+      let yMax = -Infinity;
+
+      activeIds.forEach((id, idx) => {
+        const mat = MATERIALS_DATABASE.find(m => m.id === id);
+        if (!mat) return;
+
+        const pts = [];
+        for (let i = 0; i < numPts; i++) {
+          const tk = tMinK + i * stepK;
+          const cp = calculateCp(mat, tk);
+          pts.push({ tk: tk, tDisp: kToDisp(tk), cp: cp });
+          if (cp < yMin) yMin = cp;
+          if (cp > yMax) yMax = cp;
+        }
+
+        plottedDataCache.push({
+          mat: mat,
+          color: PALETTE[idx % PALETTE.length],
+          pts: pts
+        });
+      });
+
+      if (yMin === Infinity) { yMin = 0; yMax = 1000; }
+      if (yMin > 0) yMin = 0;
+      yMax = yMax * 1.12;
+
+      function mapX(td) {
+        const xMin = kToDisp(tMinK);
+        const xMax = kToDisp(tMaxK);
+        return pad.left + ((td - xMin) / (xMax - xMin)) * plotW;
+      }
+
+      function mapY(val) {
+        return pad.top + plotH - ((val - yMin) / (yMax - yMin)) * plotH;
+      }
+
+      let svgHTML = "";
+
+      // Background rect
+      svgHTML += `<rect width="${width}" height="${height}" fill="#ffffff"/>`;
+
+      // X-Gridlines & Labels
+      const xTicks = 6;
+      const xMinD = kToDisp(tMinK);
+      const xMaxD = kToDisp(tMaxK);
+      for (let i = 0; i <= xTicks; i++) {
+        const val = xMinD + i * ((xMaxD - xMinD) / xTicks);
+        const xPos = mapX(val);
+        svgHTML += `<line x1="${xPos}" y1="${pad.top}" x2="${xPos}" y2="${pad.top + plotH}" stroke="#f1f5f9" stroke-width="1.2"/>`;
+        svgHTML += `<text x="${xPos}" y="${pad.top + plotH + 18}" text-anchor="middle" fill="#64748b" font-size="11">${Math.round(val)}</text>`;
+      }
+
+      // Y-Gridlines & Labels
+      const yTicks = 5;
+      for (let i = 0; i <= yTicks; i++) {
+        const val = yMin + i * ((yMax - yMin) / yTicks);
+        const yPos = mapY(val);
+        svgHTML += `<line x1="${pad.left}" y1="${yPos}" x2="${pad.left + plotW}" y2="${yPos}" stroke="#f1f5f9" stroke-width="1.2"/>`;
+        const lbl = val > 10 ? Math.round(val) : val.toFixed(2);
+        svgHTML += `<text x="${pad.left - 10}" y="${yPos + 4}" text-anchor="end" fill="#64748b" font-size="11">${lbl}</text>`;
+      }
+
+      // Plot border
+      svgHTML += `<rect x="${pad.left}" y="${pad.top}" width="${plotW}" height="${plotH}" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>`;
+
+      // Axis Titles
+      svgHTML += `<text x="${pad.left + plotW / 2}" y="${height - 12}" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Temperature, T (${tempUnit})</text>`;
+      svgHTML += `<text x="18" y="${pad.top + plotH / 2}" text-anchor="middle" fill="#334155" font-size="12" font-weight="600" transform="rotate(-90, 18, ${pad.top + plotH / 2})">Specific Heat Capacity, Cp (${cpUnit})</text>`;
+
+      // Curves
+      plottedDataCache.forEach(curve => {
+        let d = "";
+        curve.pts.forEach((pt, idx) => {
+          const px = mapX(pt.tDisp);
+          const py = mapY(pt.cp);
+          if (idx === 0) d += `M ${px.toFixed(1)} ${py.toFixed(1)}`;
+          else d += ` L ${px.toFixed(1)} ${py.toFixed(1)}`;
+        });
+        svgHTML += `<path d="${d}" fill="none" stroke="${curve.color}" stroke-width="2.5" stroke-linecap="round"/>`;
+      });
+
+      // Vertical hover indicator line (initially hidden)
+      svgHTML += `<line id="hover-line" x1="0" y1="${pad.top}" x2="0" y2="${pad.top + plotH}" stroke="#94a3b8" stroke-dasharray="3 3" stroke-width="1.2" style="display:none;"/>`;
+
+      svgEl.innerHTML = svgHTML;
+    }
+
+    // Mouse Interaction for Hover Tooltip
+    chartBox.addEventListener("mousemove", (e) => {
+      if (plottedDataCache.length === 0) return;
+      const rect = chartBox.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const pad = { left: 75, right: 30, top: 30, bottom: 50 };
+      const plotW = rect.width - pad.left - pad.right;
+
+      if (mouseX < pad.left || mouseX > rect.width - pad.right || mouseY < pad.top || mouseY > rect.height - pad.bottom) {
+        tooltip.style.display = "none";
+        const hLine = document.getElementById("hover-line");
+        if (hLine) hLine.style.display = "none";
+        return;
+      }
+
+      const tMinK = dispToK(tempMin);
+      const tMaxK = dispToK(tempMax);
+      const xMinD = kToDisp(tMinK);
+      const xMaxD = kToDisp(tMaxK);
+
+      const frac = (mouseX - pad.left) / plotW;
+      const hoverTD = xMinD + frac * (xMaxD - xMinD);
+      const hoverTK = dispToK(hoverTD);
+
+      const hLine = document.getElementById("hover-line");
+      if (hLine) {
+        hLine.setAttribute("x1", mouseX);
+        hLine.setAttribute("x2", mouseX);
+        hLine.style.display = "block";
+      }
+
+      let tip = `<strong>T = ${hoverTD.toFixed(1)} ${tempUnit}</strong><br>`;
+      plottedDataCache.forEach(c => {
+        const cp = calculateCp(c.mat, hoverTK);
+        tip += `<span style="color:${c.color};">&bull;</span> ${c.mat.name}: <strong>${cp.toFixed(2)}</strong> ${cpUnit}<br>`;
+      });
+
+      tooltip.innerHTML = tip;
+      tooltip.style.left = `${Math.min(mouseX + 15, rect.width - 240)}px`;
+      tooltip.style.top = `${Math.max(mouseY - 20, 10)}px`;
+      tooltip.style.display = "block";
+    });
+
+    chartBox.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      const hLine = document.getElementById("hover-line");
+      if (hLine) hLine.style.display = "none";
+    });
+
+    // Material List Rendering
+    function renderMaterialList() {
+      const listEl = document.getElementById("mat-list");
+      listEl.innerHTML = "";
+
+      const filtered = MATERIALS_DATABASE.filter(m => {
+        const matchCat = (currentCategory === "all" || m.category === currentCategory);
+        const matchSearch = !searchQuery ||
+          m.name.toLowerCase().includes(searchQuery) ||
+          m.formula.toLowerCase().includes(searchQuery) ||
+          m.category.toLowerCase().includes(searchQuery);
+        return matchCat && matchSearch;
+      });
+
+      document.getElementById("mat-count-badge").textContent = `${filtered.length} shown`;
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="padding:12px; font-size:0.8rem; color:#6b7280; text-align:center;">No matching materials found.</div>`;
+        return;
+      }
+
+      filtered.forEach(mat => {
+        const isSel = activeIds.includes(mat.id);
+        const div = document.createElement("div");
+        div.className = `mat-item ${isSel ? "selected" : ""}`;
+        div.innerHTML = `
+          <div>
+            <div>${mat.name}</div>
+            <div style="font-size:0.7rem; color:#64748b;">${mat.formula} &bull; ${mat.category}</div>
+          </div>
+          <span style="font-size:0.75rem; color:${isSel ? "#2563eb" : "#64748b"};">${isSel ? "&#10004; Plotted" : "+ Add"}</span>
+        `;
+
+        div.addEventListener("click", () => {
+          if (isSel) {
+            activeIds = activeIds.filter(id => id !== mat.id);
+          } else {
+            activeIds.push(mat.id);
+          }
+          updateAll();
+        });
+
+        listEl.appendChild(div);
+      });
+    }
+
+    // Active Selected Tags Rendering
+    function renderActiveTags() {
+      const tagsEl = document.getElementById("active-tags");
+      tagsEl.innerHTML = "";
+
+      if (activeIds.length === 0) {
+        tagsEl.innerHTML = `<span style="font-size:0.75rem; color:#94a3b8; padding:2px;">None selected (click materials above to plot)</span>`;
+        return;
+      }
+
+      activeIds.forEach((id, idx) => {
+        const mat = MATERIALS_DATABASE.find(m => m.id === id);
+        if (!mat) return;
+        const color = PALETTE[idx % PALETTE.length];
+
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `
+          <span class="tag-dot" style="background:${color};"></span>
+          <span>${mat.name}</span>
+          <span class="tag-close" title="Remove">&times;</span>
+        `;
+
+        tag.querySelector(".tag-close").addEventListener("click", (e) => {
+          e.stopPropagation();
+          activeIds = activeIds.filter(mid => mid !== id);
+          updateAll();
+        });
+
+        tagsEl.appendChild(tag);
+      });
+    }
+
+    // Ranking Table Rendering
+    function renderRankingTable() {
+      const tbody = document.getElementById("table-ranking-body");
+      tbody.innerHTML = "";
+
+      const refTK = dispToK(refTempK);
+
+      const items = activeIds.map(id => {
+        const mat = MATERIALS_DATABASE.find(m => m.id === id);
+        if (!mat) return null;
+        return { mat: mat, cp: calculateCp(mat, refTK) };
+      }).filter(Boolean);
+
+      items.sort((a, b) => b.cp - a.cp);
+
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No materials selected</td></tr>`;
+        return;
+      }
+
+      items.forEach((item, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>#${i + 1}</strong></td>
+          <td>${item.mat.name}</td>
+          <td><code>${item.mat.formula}</code></td>
+          <td><strong>${item.cp.toFixed(2)}</strong> ${cpUnit}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Citations & Equations Rendering
+    function renderCitations() {
+      const cont = document.getElementById("citations-list");
+      cont.innerHTML = "";
+
+      if (activeIds.length === 0) {
+        cont.innerHTML = `<div style="font-size:0.75rem; color:#94a3b8; text-align:center; padding:15px;">Select materials to inspect NIST equations and source citations.</div>`;
+        return;
+      }
+
+      activeIds.forEach(id => {
+        const mat = MATERIALS_DATABASE.find(m => m.id === id);
+        if (!mat) return;
+
+        const box = document.createElement("div");
+        box.className = "citation-box";
+        box.innerHTML = `
+          <div style="font-weight:700; color:#1e40af;">${mat.name} (${mat.formula}) &mdash; Mol. Wt: ${mat.mw} g/mol</div>
+          <div><strong>Primary Source:</strong> ${mat.source}</div>
+          <div><strong>Model Formulation:</strong> ${mat.eq_type.toUpperCase()} | <strong>Calibrated Range:</strong> ${mat.T_min} K to ${mat.T_max} K</div>
+          <div style="color:#64748b; margin-top:2px;">${mat.notes}</div>
+        `;
+        cont.appendChild(box);
+      });
+    }
+
+    // CSV Export
+    function exportCSV() {
+      if (activeIds.length === 0) {
+        alert("Please select at least one material to export data.");
+        return;
+      }
+
+      const tMinK = dispToK(tempMin);
+      const tMaxK = dispToK(tempMax);
+      const numPts = 100;
+      const stepK = (tMaxK - tMinK) / (numPts - 1);
+
+      const activeMats = activeIds.map(id => MATERIALS_DATABASE.find(m => m.id === id)).filter(Boolean);
+      let headers = [`Temperature (${tempUnit})`];
+      activeMats.forEach(m => headers.push(`"${m.name} [${m.formula}] (${cpUnit})"`));
+
+      let rows = [headers.join(",")];
+
+      for (let i = 0; i < numPts; i++) {
+        const tk = tMinK + i * stepK;
+        const row = [kToDisp(tk).toFixed(2)];
+        activeMats.forEach(m => {
+          row.push(calculateCp(m, tk).toFixed(3));
+        });
+        rows.push(row.join(","));
+      }
+
+      const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Cp_T_Data_${tempUnit}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // Central Synchronized Update
+    function updateAll() {
+      renderMaterialList();
+      renderActiveTags();
+      renderPlot();
+      renderRankingTable();
+      renderCitations();
+    }
+
+    // Event Listeners
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      renderMaterialList();
+    });
+
+    document.getElementById("category-select").addEventListener("change", (e) => {
+      currentCategory = e.target.value;
+      renderMaterialList();
+    });
+
+    document.getElementById("input-tmin").addEventListener("change", (e) => {
+      tempMin = parseFloat(e.target.value) || 200;
+      renderPlot();
+    });
+
+    document.getElementById("input-tmax").addEventListener("change", (e) => {
+      tempMax = parseFloat(e.target.value) || 1500;
+      renderPlot();
+    });
+
+    document.getElementById("select-tunit").addEventListener("change", (e) => {
+      const oldUnit = tempUnit;
+      tempUnit = e.target.value;
+      if (oldUnit === "K" && tempUnit === "C") {
+        tempMin -= 273.15;
+        tempMax -= 273.15;
+      } else if (oldUnit === "C" && tempUnit === "K") {
+        tempMin += 273.15;
+        tempMax += 273.15;
+      }
+      document.getElementById("input-tmin").value = Math.round(tempMin);
+      document.getElementById("input-tmax").value = Math.round(tempMax);
+      document.getElementById("label-reft").textContent = `${refTempK.toFixed(1)} ${tempUnit}`;
+      updateAll();
+    });
+
+    document.getElementById("select-cpunit").addEventListener("change", (e) => {
+      cpUnit = e.target.value;
+      updateAll();
+    });
+
+    document.getElementById("slider-reft").addEventListener("input", (e) => {
+      refTempK = parseFloat(e.target.value);
+      document.getElementById("label-reft").textContent = `${refTempK.toFixed(1)} ${tempUnit}`;
+      renderRankingTable();
+    });
+
+    // Preset Buttons
+    document.getElementById("preset-metals").addEventListener("click", () => {
+      activeIds = ["met_01", "met_02", "met_03", "met_04", "met_05", "met_06"];
+      updateAll();
+    });
+
+    document.getElementById("preset-ceramics").addEventListener("click", () => {
+      activeIds = ["cer_01", "cer_02", "cer_03", "cer_04", "cer_05", "cer_06"];
+      updateAll();
+    });
+
+    document.getElementById("preset-multiclass").addEventListener("click", () => {
+      activeIds = ["met_01", "met_02", "cer_01", "semi_01", "poly_01", "gla_01", "ref_01", "comp_01"];
+      updateAll();
+    });
+
+    document.getElementById("preset-clear").addEventListener("click", () => {
+      activeIds = [];
+      updateAll();
+    });
+
+    document.getElementById("btn-reset-view").addEventListener("click", () => {
+      tempMin = tempUnit === "K" ? 200 : -73;
+      tempMax = tempUnit === "K" ? 1500 : 1227;
+      document.getElementById("input-tmin").value = Math.round(tempMin);
+      document.getElementById("input-tmax").value = Math.round(tempMax);
+      renderPlot();
+    });
+
+    document.getElementById("btn-export-csv").addEventListener("click", exportCSV);
+
+    window.addEventListener("resize", renderPlot);
+    window.addEventListener("DOMContentLoaded", updateAll);
+    window.addEventListener("load", updateAll);
+
+    // Initial immediate invocation
+    updateAll();
+  </script>
+</body>
+</html>
